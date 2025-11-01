@@ -10,7 +10,7 @@
       main = {
         term = "xterm-256color";
 
-        font = "Maple Mono NF:size=11";
+        font = "Maple Mono NF:size=9";
         dpi-aware = "yes";
       };
 

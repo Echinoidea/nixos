@@ -7,6 +7,7 @@
     ./home/git.nix
     ./home/zsh.nix
     ./home/foot.nix
+    ./home/fastfetch.nix
   ];
 
   # User packages
