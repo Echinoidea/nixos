@@ -1,3 +1,4 @@
 .direnv/
 .envrc
 nil.json
+hardware-configuration.nix
