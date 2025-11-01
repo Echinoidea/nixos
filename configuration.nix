@@ -1,4 +1,9 @@
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   swhkd = pkgs.rustPlatform.buildRustPackage {
@@ -14,7 +19,10 @@ let
 
     cargoHash = "sha256-RGO9kEttGecllzH0gBIW6FnoSHGcrDfLDf2omUqKxX4=";
 
-    nativeBuildInputs = with pkgs; [ pkg-config scdoc ];
+    nativeBuildInputs = with pkgs; [
+      pkg-config
+      scdoc
+    ];
     buildInputs = with pkgs; [ libevdev ];
 
     postInstall = ''
@@ -32,9 +40,12 @@ let
       platforms = platforms.linux;
     };
   };
-in {
-  imports =
-    [ ./hardware-configuration.nix inputs.home-manager.nixosModules.default ];
+in
+{
+  imports = [
+    ./hardware-configuration.nix
+    inputs.home-manager.nixosModules.default
+  ];
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -69,7 +80,12 @@ in {
   users.users.gabriel = {
     isNormalUser = true;
     description = "Gabriel";
-    extraGroups = [ "networkmanager" "wheel" "input" "docker" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "input"
+      "docker"
+    ];
     packages = with pkgs; [ ];
     shell = pkgs.zsh;
   };
@@ -78,7 +94,10 @@ in {
 
   nixpkgs.config.allowUnfree = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   services.displayManager.ly.enable = true;
 
@@ -92,12 +111,13 @@ in {
 
   environment.systemPackages = with pkgs; [
     neovim
-    alacritty
+    foot
     kitty
     firefox
     git
-    ((emacsPackagesFor emacs-pgtk).emacsWithPackages
-      (epkgs: [ epkgs.treesit-grammars.with-all-grammars ]))
+    ((emacsPackagesFor emacs-pgtk).emacsWithPackages (epkgs: [
+      epkgs.treesit-grammars.with-all-grammars
+    ]))
     ripgrep
     cmake
     fastfetch
@@ -110,10 +130,8 @@ in {
     pywal
     waybar
     nsxiv
-    psmisc
     zathura
     python3
-    fish
     starship
     ffmpeg
     openssl
@@ -122,11 +140,9 @@ in {
     inotify-tools
     vips
     btop
-    hyfetch
     vesktop
     xdg-desktop-portal-gnome
     xwayland-satellite
-    semgrep
     rmpc
     cava
     mpc
@@ -166,7 +182,11 @@ in {
     '';
   };
 
-  systemd.services.mpd.environment = { XDG_RUNTIME_DIR = "/run/user/1000"; };
+  systemd.services.mpd.environment = {
+    XDG_RUNTIME_DIR = "/run/user/1000";
+  };
+
+  programs.foot.enableZshIntegration = true;
 
   services.emacs = {
     enable = false;
@@ -178,13 +198,13 @@ in {
     XCURSOR_THEME = "BreezeX-RosePineDawn-Linux";
     XCURSOR_SIZE = "22";
     TREE_SITTER_DIR = "${
-        pkgs.tree-sitter.withPlugins (p: [
-          p.tree-sitter-typescript
-          p.tree-sitter-tsx
-          p.tree-sitter-javascript
-          p.tree-sitter-lua
-        ])
-      }/lib";
+      pkgs.tree-sitter.withPlugins (p: [
+        p.tree-sitter-typescript
+        p.tree-sitter-tsx
+        p.tree-sitter-javascript
+        p.tree-sitter-lua
+      ])
+    }/lib";
   };
 
   environment.etc."libinput/local-overrides.quirks".text = ''

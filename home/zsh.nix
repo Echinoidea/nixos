@@ -16,7 +16,7 @@
 
     initContent = ''
       eval "$(starship init zsh)"
-      cat ~/.cache/wal/sequences
+      (cat ~/.cache/wal/sequences &)
     '';
 
     oh-my-zsh = {

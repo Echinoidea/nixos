@@ -3,9 +3,13 @@
 {
   home.stateVersion = "25.05";
 
-  imports = [ ./home/git.nix ./home/zsh.nix ];
+  imports = [
+    ./home/git.nix
+    ./home/zsh.nix
+    ./home/foot.nix
+  ];
 
-  # User packages 
+  # User packages
   home.packages = with pkgs; [ ];
 
   # Dotfile management
