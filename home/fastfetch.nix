@@ -2,13 +2,11 @@
   programs.fastfetch = {
     enable = true;
     settings = {
-      "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
+      "$schema" = "https=//github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
 
       logo = {
         type = "auto";
         source = "nix";
-        height = 15;
-        width = 30;
         padding = {
           top = 2;
           left = 3;
@@ -28,7 +26,7 @@
         }
         {
           type = "cpu";
-          key = "│ ├";
+          key = "│ ├";
           keyColor = "green";
         }
         {
@@ -43,7 +41,7 @@
         }
         {
           type = "disk";
-          key = "│ ├";
+          key = "│ ├";
           keyColor = "green";
         }
         {
@@ -68,12 +66,12 @@
         }
         {
           type = "kernel";
-          key = "│ ├";
+          key = "│ ├";
           keyColor = "yellow";
         }
         {
           type = "bios";
-          key = "│ ├";
+          key = "│ ├";
           keyColor = "yellow";
         }
         {
@@ -83,17 +81,17 @@
         }
         {
           type = "shell";
-          key = "│ ├";
+          key = "│ ├";
           keyColor = "yellow";
         }
         {
           type = "lm";
-          key = "│ ├";
+          key = "│ ├";
           keyColor = "yellow";
         }
         {
           type = "wm";
-          key = "│ ├";
+          key = "│ ├";
           keyColor = "yellow";
         }
         {
@@ -103,7 +101,7 @@
         }
         {
           type = "terminal";
-          key = "│ └";
+          key = "│ └";
           keyColor = "yellow";
         }
         {
@@ -135,6 +133,7 @@
           type = "custom";
           format = "└────────────────────────────────────────────────────┘";
         }
+
         {
           type = "colors";
           paddingLeft = 0;
