@@ -2,8 +2,9 @@
 
 {
   programs.zsh = {
+    enable = true;
     enableCompletion = true;
-    autosuggest.enable = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
     shellAliases = {
@@ -13,10 +14,18 @@
     };
     history.size = 10000;
 
+    initContent = ''
+      eval "$(starship init zsh)"
+      cat ~/.cache/wal/sequences
+    '';
+
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "thefuck" ];
-      theme = "robbyrussell";
+      plugins = [
+        "git"
+        "aliases" # Use command als for alias cheatsheet
+        "emacs"
+      ];
     };
   };
 }

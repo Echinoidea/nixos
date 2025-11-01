@@ -2,7 +2,7 @@
 
 {
   programs.git = {
-    userName = "Gabriel Hooks";
-    userEmail = "gabriel.i.hooks@gmail.com";
+    settings.user.name = "Gabriel Hooks";
+    settings.user.email = "gabriel.i.hooks@gmail.com";
   };
 }

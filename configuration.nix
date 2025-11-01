@@ -36,6 +36,8 @@ in {
   imports =
     [ ./hardware-configuration.nix inputs.home-manager.nixosModules.default ];
 
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
   home-manager.users.gabriel = import ./home.nix;
 
   boot.loader.systemd-boot.enable = true;

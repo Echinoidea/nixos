@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     home-manager.url = "github:nix-community/home-manager";
 
     aporetic-font = {
@@ -12,11 +11,19 @@
     };
   };
 
-  outputs = { self, nixpkgs, aporetic-font, ... }@inputs: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; }; # Pass inputs to modules
-      modules = [ ./configuration.nix ];
+  outputs =
+    {
+      self,
+      nixpkgs,
+      aporetic-font,
+      ...
+    }@inputs:
+    {
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; }; # Pass inputs to modules
+        modules = [ ./configuration.nix ];
+      };
+
     };
-  };
 }
