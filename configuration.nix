@@ -41,11 +41,11 @@ let
     };
   };
 
-  emacsX11 = (
-    (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
-      epkgs.treesit-grammars.with-all-grammars
-    ])
-  );
+  # emacsX11 = (
+  #   (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
+  #     epkgs.treesit-grammars.with-all-grammars
+  #   ])
+  # );
 
   emacsPgtk = (
     (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
@@ -126,7 +126,6 @@ in
     foot
     firefox
     git
-    emacsX11
     emacsPgtk
     ripgrep
     cmake
@@ -164,7 +163,8 @@ in
     lm_sensors
     id3v2
     sshpass
-    swaylock
+    eww
+    jq
   ];
 
   programs.direnv.enable = true;
@@ -204,34 +204,34 @@ in
   #   defaultEditor = true;
   # };
 
-  environment.etc."emacs-wrapper" = {
-    text = ''
-      #!/bin/sh
-      if [ -n "$WAYLAND_DISPLAY" ]; then
-        exec ${emacsPgtk}/bin/emacs "$@"
-      else
-        exec ${emacsX11}/bin/emacs "$@"
-      fi
-    '';
-    mode = "0755";
-  };
-
-  environment.etc."emacsclient-wrapper" = {
-    text = ''
-      #!/bin/sh
-      if [ -n "$WAYLAND_DISPLAY" ]; then
-        exec ${emacsPgtk}/bin/emacsclient "$@"
-      else
-        exec ${emacsX11}/bin/emacsclient "$@"
-      fi
-    '';
-    mode = "0755";
-  };
-
-  environment.shellAliases = {
-    emacs = "/etc/emacs-wrapper";
-    emacsclient = "/etc/emacsclient-wrapper";
-  };
+  # environment.etc."emacs-wrapper" = {
+  #   text = ''
+  #     #!/bin/sh
+  #     if [ -n "$WAYLAND_DISPLAY" ]; then
+  #       exec ${emacsPgtk}/bin/emacs "$@"
+  #     else
+  #       exec ${emacsX11}/bin/emacs "$@"
+  #     fi
+  #   '';
+  #   mode = "0755";
+  # };
+  #
+  # environment.etc."emacsclient-wrapper" = {
+  #   text = ''
+  #     #!/bin/sh
+  #     if [ -n "$WAYLAND_DISPLAY" ]; then
+  #       exec ${emacsPgtk}/bin/emacsclient "$@"
+  #     else
+  #       exec ${emacsX11}/bin/emacsclient "$@"
+  #     fi
+  #   '';
+  #   mode = "0755";
+  # };
+  #
+  # environment.shellAliases = {
+  #   emacs = "/etc/emacs-wrapper";
+  #   emacsclient = "/etc/emacsclient-wrapper";
+  # };
 
   environment.variables = {
     XCURSOR_THEME = "BreezeX-RosePineDawn-Linux";

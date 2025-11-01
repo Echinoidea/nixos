@@ -11,6 +11,8 @@
       nrs = "sudo nixos-rebuild switch --flake ~/nixos#nixos";
       nrb = "sudo nixos-rebuild boot --flake ~/nixos#nixos";
       nrt = "sudo nixos-rebuild test --flake ~/nixos#nixos";
+      nso = "sudo nix-store --optimize -vv";
+      ngc = "sudo nix-collect-garbage -d";
       start-swhkd = "pkexec env XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR XDG_CONFIG_HOME=$XDG_CONFIG_HOME swhkd -c ~/.config/swhkd/swhkdrc;";
     };
     history.size = 10000;
