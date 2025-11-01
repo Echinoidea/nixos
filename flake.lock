@@ -1,0 +1,48 @@
+{
+  "nodes": {
+    "aporetic-font": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1760462493,
+        "narHash": "sha256-wvzjwnLeaabfhjZCfGpqolalBslcI5oFAdwuQG9VbBI=",
+        "owner": "Echinoidea",
+        "repo": "Aporetic-Nerd-Font",
+        "rev": "88ae58addaa9240cf329b389afb21338748ec749",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Echinoidea",
+        "repo": "Aporetic-Nerd-Font",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1761672384,
+        "narHash": "sha256-o9KF3DJL7g7iYMZq9SWgfS1BFlNbsm6xplRjVlOCkXI=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "08dacfca559e1d7da38f3cf05f1f45ee9bfd213c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "aporetic-font": "aporetic-font",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
