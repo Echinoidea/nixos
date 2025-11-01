@@ -110,7 +110,7 @@
         vesktop && echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # rmpc
     m
-    	kitty -e bash -c 'cat ~/.cache/wal/sequences && rmpc' &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	foot -e zsh -c 'cat ~/.cache/wal/sequences && rmpc' &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
 
     Escape
     	  echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape

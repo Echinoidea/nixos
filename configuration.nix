@@ -101,10 +101,10 @@ in
 
   services.displayManager.ly.enable = true;
 
-  services.xserver = {
-    enable = true;
-    windowManager.bspwm.enable = true;
-  };
+  # services.xserver = {
+  #   enable = true;
+  #   windowManager.bspwm.enable = true;
+  # };
 
   programs.niri.enable = true;
   programs.zsh.enable = true;
@@ -112,7 +112,6 @@ in
   environment.systemPackages = with pkgs; [
     neovim
     foot
-    kitty
     firefox
     git
     ((emacsPackagesFor emacs-pgtk).emacsWithPackages (epkgs: [
@@ -149,12 +148,12 @@ in
     mpv
     fd
     gnumake
-    nixfmt-classic
     emacs-lsp-booster
     yt-dlp
     lm_sensors
     id3v2
     sshpass
+    swaylock
   ];
 
   programs.direnv.enable = true;
