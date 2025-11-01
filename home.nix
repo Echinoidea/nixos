@@ -10,6 +10,7 @@
     ./home/fastfetch.nix
     ./home/starship.nix
     ./home/swhkd.nix
+    ./home/xfce.nix
   ];
 
   # User packages

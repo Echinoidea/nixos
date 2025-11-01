@@ -40,11 +40,24 @@ let
       platforms = platforms.linux;
     };
   };
+
+  emacsX11 = (
+    (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
+      epkgs.treesit-grammars.with-all-grammars
+    ])
+  );
+
+  emacsPgtk = (
+    (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
+      epkgs.treesit-grammars.with-all-grammars
+    ])
+  );
 in
 {
   imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
+    ./packages/chicago95.nix
   ];
 
   home-manager.useGlobalPkgs = true;
@@ -72,11 +85,6 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
   users.users.gabriel = {
     isNormalUser = true;
     description = "Gabriel";
@@ -101,10 +109,14 @@ in
 
   services.displayManager.ly.enable = true;
 
-  # services.xserver = {
-  #   enable = true;
-  #   windowManager.bspwm.enable = true;
-  # };
+  services.xserver = {
+    enable = true;
+    desktopManager.xfce.enable = true;
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
+  };
 
   programs.niri.enable = true;
   programs.zsh.enable = true;
@@ -114,9 +126,8 @@ in
     foot
     firefox
     git
-    ((emacsPackagesFor emacs-pgtk).emacsWithPackages (epkgs: [
-      epkgs.treesit-grammars.with-all-grammars
-    ]))
+    emacsX11
+    emacsPgtk
     ripgrep
     cmake
     fastfetch
@@ -187,10 +198,39 @@ in
 
   programs.foot.enableZshIntegration = true;
 
-  services.emacs = {
-    enable = false;
-    package = pkgs.emacs-pgtk;
-    defaultEditor = true;
+  # services.emacs = {
+  #   enable = false;
+  #   package = pkgs.emacs-pgtk;
+  #   defaultEditor = true;
+  # };
+
+  environment.etc."emacs-wrapper" = {
+    text = ''
+      #!/bin/sh
+      if [ -n "$WAYLAND_DISPLAY" ]; then
+        exec ${emacsPgtk}/bin/emacs "$@"
+      else
+        exec ${emacsX11}/bin/emacs "$@"
+      fi
+    '';
+    mode = "0755";
+  };
+
+  environment.etc."emacsclient-wrapper" = {
+    text = ''
+      #!/bin/sh
+      if [ -n "$WAYLAND_DISPLAY" ]; then
+        exec ${emacsPgtk}/bin/emacsclient "$@"
+      else
+        exec ${emacsX11}/bin/emacsclient "$@"
+      fi
+    '';
+    mode = "0755";
+  };
+
+  environment.shellAliases = {
+    emacs = "/etc/emacs-wrapper";
+    emacsclient = "/etc/emacsclient-wrapper";
   };
 
   environment.variables = {
