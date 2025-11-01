@@ -4,19 +4,19 @@ let
   swhkd = pkgs.rustPlatform.buildRustPackage {
     pname = "swhkd";
     version = "1.2.1";
-    
+
     src = pkgs.fetchFromGitHub {
       owner = "waycrate";
       repo = "swhkd";
       rev = "1.2.1";
       sha256 = "sha256-VQW01j2RxhLUx59LAopZEdA7TyZBsJrF1Ym3LumvFqA=";
     };
-    
+
     cargoHash = "sha256-RGO9kEttGecllzH0gBIW6FnoSHGcrDfLDf2omUqKxX4=";
-    
+
     nativeBuildInputs = with pkgs; [ pkg-config scdoc ];
     buildInputs = with pkgs; [ libevdev ];
-    
+
     postInstall = ''
       if [ -d "docs" ]; then
         mkdir -p $out/share/man/man1 $out/share/man/man5
@@ -24,7 +24,7 @@ let
         find docs -name "*.5" -exec cp {} $out/share/man/man5/ \; 2>/dev/null || true
       fi
     '';
-    
+
     meta = with pkgs.lib; {
       description = "A simple hotkey daemon for Wayland";
       homepage = "https://github.com/waycrate/swhkd";
@@ -32,11 +32,11 @@ let
       platforms = platforms.linux;
     };
   };
-in
-{
-  imports = [ 
-    ./hardware-configuration.nix
-  ];
+in {
+  imports =
+    [ ./hardware-configuration.nix inputs.home-manager.nixosModules.default ];
+
+  home-manager.users.gabriel = import ./home.nix;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -67,8 +67,8 @@ in
   users.users.gabriel = {
     isNormalUser = true;
     description = "Gabriel";
-    extraGroups = [ "networkmanager" "wheel" "input" "docker"];
-    packages = with pkgs; [];
+    extraGroups = [ "networkmanager" "wheel" "input" "docker" ];
+    packages = with pkgs; [ ];
     shell = pkgs.zsh;
   };
 
@@ -76,7 +76,7 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   services.displayManager.ly.enable = true;
 
@@ -94,9 +94,8 @@ in
     kitty
     firefox
     git
-    ((emacsPackagesFor emacs-pgtk).emacsWithPackages (epkgs: [
-      epkgs.treesit-grammars.with-all-grammars
-    ]))
+    ((emacsPackagesFor emacs-pgtk).emacsWithPackages
+      (epkgs: [ epkgs.treesit-grammars.with-all-grammars ]))
     ripgrep
     cmake
     fastfetch
@@ -165,9 +164,7 @@ in
     '';
   };
 
-  systemd.services.mpd.environment = {
-    XDG_RUNTIME_DIR = "/run/user/1000";  
-  };
+  systemd.services.mpd.environment = { XDG_RUNTIME_DIR = "/run/user/1000"; };
 
   services.emacs = {
     enable = false;
@@ -178,21 +175,23 @@ in
   environment.variables = {
     XCURSOR_THEME = "BreezeX-RosePineDawn-Linux";
     XCURSOR_SIZE = "22";
-    TREE_SITTER_DIR = "${pkgs.tree-sitter.withPlugins (p: [
-      p.tree-sitter-typescript
-      p.tree-sitter-tsx
-      p.tree-sitter-javascript
-      p.tree-sitter-lua
-    ])}/lib";
+    TREE_SITTER_DIR = "${
+        pkgs.tree-sitter.withPlugins (p: [
+          p.tree-sitter-typescript
+          p.tree-sitter-tsx
+          p.tree-sitter-javascript
+          p.tree-sitter-lua
+        ])
+      }/lib";
   };
 
-environment.etc."libinput/local-overrides.quirks".text = ''
-  [Touchpad Sensitivity Fix]
-  MatchUdevType=touchpad
-  AttrPalmPressureThreshold=300
-  AttrPalmSizeThreshold=80
-  AttrTouchSizeRange=80:120
-'';
+  environment.etc."libinput/local-overrides.quirks".text = ''
+    [Touchpad Sensitivity Fix]
+    MatchUdevType=touchpad
+    AttrPalmPressureThreshold=300
+    AttrPalmSizeThreshold=80
+    AttrTouchSizeRange=80:120
+  '';
 
   security.polkit.enable = true;
   security.polkit.extraConfig = ''
@@ -220,10 +219,10 @@ environment.etc."libinput/local-overrides.quirks".text = ''
   services.openssh.enable = true;
   services.fail2ban.enable = true;
 
-networking.firewall = {
-  enable = true;
-  allowedTCPPorts = [ 3000 ];
-};
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 3000 ];
+  };
 
   system.stateVersion = "25.05";
 }
