@@ -11,6 +11,7 @@
     ./home/starship.nix
     ./home/swhkd.nix
     ./home/xfce.nix
+    ./home/firefox.nix
   ];
 
   # User packages
