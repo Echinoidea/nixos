@@ -122,49 +122,58 @@ in
   programs.zsh.enable = true;
 
   environment.systemPackages = with pkgs; [
-    neovim
-    foot
-    firefox
+    # Utils
     git
-    emacsPgtk
-    ripgrep
     cmake
-    fastfetch
-    dunst
     libnotify
-    wl-clipboard
-    brightnessctl
-    fuzzel
-    swww
-    pywal
-    waybar
+    vips # I dont remember why I need this...
+    alacritty
+    foot
+    neovim
+    inotify-tools
+    gnumake # I don't think I need this, I need gcc or cc
+    sshpass
+    jq # Required for my eww config, also good to just have
+    # Graphical Programs
+    firefox
+    dunst
     nsxiv
     zathura
-    python3
+    mpv
+    vesktop
+    eww
+    ## Wayland-specific Graphical Programs
+    fuzzel
+    swww
+    waybar
+    # CLI Programs
+    fastfetch
+    wl-clipboard
+    brightnessctl
+    pywal
     starship
     ffmpeg
     openssl
-    rose-pine-cursor
     swhkd
-    inotify-tools
-    vips
     btop
-    vesktop
-    xdg-desktop-portal-gnome
-    xwayland-satellite
     rmpc
     cava
     mpc
-    mpv
-    fd
-    gnumake
-    emacs-lsp-booster
-    yt-dlp
     lm_sensors
     id3v2
-    sshpass
-    eww
-    jq
+    yt-dlp
+    # Emacs and Emacs dependencies
+    emacsPgtk
+    ripgrep
+    fd
+    emacs-lsp-booster
+    # Language dependencies
+    python3 # Unfortunately...
+    # GTK
+    rose-pine-cursor
+    # Other Wayland Stuff
+    xdg-desktop-portal-gnome
+    xwayland-satellite
   ];
 
   programs.direnv.enable = true;
@@ -197,41 +206,6 @@ in
   };
 
   programs.foot.enableZshIntegration = true;
-
-  # services.emacs = {
-  #   enable = false;
-  #   package = pkgs.emacs-pgtk;
-  #   defaultEditor = true;
-  # };
-
-  # environment.etc."emacs-wrapper" = {
-  #   text = ''
-  #     #!/bin/sh
-  #     if [ -n "$WAYLAND_DISPLAY" ]; then
-  #       exec ${emacsPgtk}/bin/emacs "$@"
-  #     else
-  #       exec ${emacsX11}/bin/emacs "$@"
-  #     fi
-  #   '';
-  #   mode = "0755";
-  # };
-  #
-  # environment.etc."emacsclient-wrapper" = {
-  #   text = ''
-  #     #!/bin/sh
-  #     if [ -n "$WAYLAND_DISPLAY" ]; then
-  #       exec ${emacsPgtk}/bin/emacsclient "$@"
-  #     else
-  #       exec ${emacsX11}/bin/emacsclient "$@"
-  #     fi
-  #   '';
-  #   mode = "0755";
-  # };
-  #
-  # environment.shellAliases = {
-  #   emacs = "/etc/emacs-wrapper";
-  #   emacsclient = "/etc/emacsclient-wrapper";
-  # };
 
   environment.variables = {
     XCURSOR_THEME = "BreezeX-RosePineDawn-Linux";
