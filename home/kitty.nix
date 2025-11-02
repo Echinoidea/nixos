@@ -13,6 +13,9 @@
       # Other useful settings
       enable_audio_bell = false;
       window_padding_width = 4;
+
+      active_border_color = "#5cedaa";
+      inactive_border_color = "#b2d9c2";
     };
 
     keybindings = {
@@ -21,14 +24,14 @@
       "ctrl+shift+q" = "close_tab";
       "alt+shift+l" = "next_tab";
       "alt+shift+h" = "previous_tab";
-      "ctrl+shift+." = "move_tab_forward";
-      "ctrl+shift+comma" = "move_tab_backward";
+      "ctrl+." = "move_tab_forward";
+      "ctrl+comma" = "move_tab_backward";
 
       # Window/split management
       "ctrl+shift+enter" = "new_window";
-      "ctrl+shift+w" = "close_window";
-      "ctrl+shift+]" = "next_window";
-      "ctrl+shift+[" = "previous_window";
+      "ctrl+w" = "close_window";
+      "ctrl+]" = "next_window";
+      "ctrl+[" = "previous_window";
 
       # Split windows
       "ctrl+shift+minus" = "launch --location=hsplit --cwd=current";
@@ -44,8 +47,17 @@
       "ctrl+shift+r" = "start_resizing_window";
 
       "ctrl+shift+space" =
-        "pipe @screen_scrollback overlay nvim - -c 'set filetype=scrollback' -c 'source ~/.config/vim/ftplugin/scrollback.vim'";
+        "pipe @screen_scrollback overlay vim - -c 'set filetype=scrollback' -c 'source ~/.config/vim/ftplugin/scrollback.vim'";
     };
+
+    extraConfig = ''
+      include ~/.cache/wal/colors-kitty.conf
+
+      # other extra config
+      tab_bar_edge top
+      tab_bar_style powerline
+      # ... etc
+    '';
   };
 
   home.file.".config/vim/ftplugin/scrollback.vim".text = ''
@@ -56,6 +68,9 @@
     set scrolloff=0
     set nowrapscan
     set relativenumber
+    set nomodifiable
+    set buftype=nofile
+    set bufhidden=wipe
     xnoremap <buffer> <cr> "+y
     nnoremap <buffer> q <cmd>q!<cr>
     nnoremap <buffer> i <cmd>q!<cr>
@@ -70,5 +85,8 @@
     silent! call search('\S', 'b')
     silent! call search('\n*\%$')
     execute "normal! \<c-y>"
+
+    " Make :q work like :q!
+    cnoremap <buffer> q q!
   '';
 }

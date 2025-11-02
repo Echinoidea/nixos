@@ -16,5 +16,12 @@
   ];
 
   # User packages
-  home.packages = with pkgs; [ ];
+  home.packages = with pkgs; [
+    (pkgs.writeShellScriptBin "niri-spawn-left" ''
+      #!/usr/bin/env bash
+      kitty &
+      sleep 0.1
+      niri msg action consume-or-expel-window-left
+    '')
+  ];
 }
