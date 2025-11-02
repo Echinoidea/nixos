@@ -6,22 +6,22 @@
 
     # Enter main menu mode
     super + space
-    	@enter main_menu && echo -n "main menu" > ~/.config/waybar/swhkd-mode
+    	@enter leader && echo -n "leader" > ~/.config/waybar/swhkd-mode
 
-    mode main_menu swallow oneoff
+    mode leader swallow oneoff
 
     # Emacs submenu
     e
-    	@escape && @enter emacs_menu && echo -n "emacs [c]alendar [a]genda" > ~/.config/waybar/swhkd-mode 
+    	@escape && @enter emacs && echo -n "emacs" > ~/.config/waybar/swhkd-mode 
     # Dmenu submenu  
     d
-    	@escape && @enter dmenu_menu && echo -n "dmenu" > ~/.config/waybar/swhkd-mode
+    	@escape && @enter dmenu && echo -n "dmenu" > ~/.config/waybar/swhkd-mode
     # Open submenu
     o
-    	@escape && @enter open_menu && echo -n "open" > ~/.config/waybar/swhkd-mode
+    	@escape && @enter open && echo -n "open" > ~/.config/waybar/swhkd-mode
     # Dirvish submenu
     y
-    	@escape && @enter dirvish_menu && echo -n "dirvish" > ~/.config/waybar/swhkd-mode
+    	@escape && @enter dirvish && echo -n "dirvish" > ~/.config/waybar/swhkd-mode
 
     Escape
     	  echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
@@ -29,7 +29,7 @@
     endmode
 
     # Emacs menu mode
-    mode emacs_menu swallow oneoff
+    mode emacs swallow oneoff
 
     # emacs org agenda
     a
@@ -44,37 +44,37 @@
     endmode
 
     # Dmenu menu mode
-    mode dmenu_menu swallow oneoff
+    mode dmenu swallow oneoff
 
     # dmenu todo
     t
-    	~/dmenu-scripts/dmenu-todo.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-todo.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu yt-dlp
     y
-    	~/dmenu-scripts/dmenu-ytdlp.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-ytdlp.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu mpc
     m
-    	~/dmenu-scripts/dmenu-mpc.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-mpc.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu power
     p 
-    	~/dmenu-scripts/dmenu-power.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-power.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu config
     c 
-    	~/dmenu-scripts/dmenu-dots.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-dots.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu wal
     w 
-    	/home/gabriel/dmenu-scripts/dmenu-wal.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	/home/gabriel/dmenu-scripts/dmenu-wal.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu read book with zathura
     b
-    	~/dmenu-scripts/dmenu-books.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-books.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu emacs submenu
     e
-    	@enter dmenu_emacs_menu && echo -n "dmenu_emacs" > ~/.config/waybar/swhkd-mode 
+    	@enter dmenu_emacs && echo -n "dmenu_emacs" > ~/.config/waybar/swhkd-mode 
     # dmenu notes
     n
-    	~/dmenu-scripts/dmenu-notes.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-notes.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     s
-    	~/dmenu-scripts/dmenu-rsync.sh &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-rsync.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
 
     Escape
     	  echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
@@ -82,7 +82,7 @@
     endmode
 
     # Dmenu Emacs submenu
-    mode dmenu_emacs_menu swallow  oneoff
+    mode dmenu_emacs swallow  oneoff
 
     # dmenu emacs open project
     p 
@@ -97,7 +97,7 @@
     endmode
 
     # Open menu mode
-    mode open_menu swallow oneoff
+    mode open swallow oneoff
 
     # emacsclient
     e 
@@ -118,7 +118,7 @@
     endmode
 
     # Dirvish menu mode
-    mode dirvish_menu swallow oneoff
+    mode dirvish swallow oneoff
 
     # dirvish wallpapers
     w 
