@@ -41,12 +41,6 @@ let
     };
   };
 
-  # emacsX11 = (
-  #   (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
-  #     epkgs.treesit-grammars.with-all-grammars
-  #   ])
-  # );
-
   emacsPgtk = (
     (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
       epkgs.treesit-grammars.with-all-grammars
@@ -127,11 +121,11 @@ in
     cmake
     libnotify
     vips # I dont remember why I need this...
-    alacritty
+    kitty
     foot
     neovim
     inotify-tools
-    gnumake # I don't think I need this, I need gcc or cc
+    gnumake
     sshpass
     jq # Required for my eww config, also good to just have
     # Graphical Programs
@@ -162,6 +156,7 @@ in
     lm_sensors
     id3v2
     yt-dlp
+    vim
     # Emacs and Emacs dependencies
     emacsPgtk
     ripgrep

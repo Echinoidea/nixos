@@ -12,6 +12,7 @@
     ./home/swhkd.nix
     ./home/xfce.nix
     ./home/firefox.nix
+    ./home/kitty.nix
   ];
 
   # User packages

@@ -104,13 +104,13 @@
     	emacsclient -a \'\' -c & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # firefox
     f
-    	firefox && echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	firefox & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # discord
     d
-        vesktop && echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+        vesktop & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # rmpc
     m
-    	foot -e zsh -c 'cat ~/.cache/wal/sequences && rmpc' &&   echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	foot -e zsh -c 'cat ~/.cache/wal/sequences && rmpc' & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
 
     Escape
     	  echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
