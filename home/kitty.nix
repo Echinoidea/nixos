@@ -51,7 +51,7 @@
     };
 
     extraConfig = ''
-      include ~/.cache/wal/colors-kitty.conf
+      include ~/.config/kitty/colors-kitty.conf
 
       # other extra config
       tab_bar_edge top

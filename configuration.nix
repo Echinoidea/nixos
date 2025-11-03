@@ -128,9 +128,9 @@ in
     gnumake
     sshpass
     jq # Required for my eww config, also good to just have
+    tiramisu
     # Graphical Programs
     firefox
-    dunst
     nsxiv
     zathura
     mpv
@@ -157,6 +157,8 @@ in
     id3v2
     yt-dlp
     vim
+    wallust
+    yad
     # Emacs and Emacs dependencies
     emacsPgtk
     ripgrep
@@ -198,6 +200,11 @@ in
 
   systemd.services.mpd.environment = {
     XDG_RUNTIME_DIR = "/run/user/1000";
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   programs.foot.enableZshIntegration = true;
