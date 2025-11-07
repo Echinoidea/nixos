@@ -54,6 +54,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-swhkd": {
+      "locked": {
+        "lastModified": 1762539944,
+        "narHash": "sha256-g457fMSIXjyk92T4EI7i2xKqNF5g6PlyteKq4q/0L8E=",
+        "owner": "Echinoidea",
+        "repo": "nixpkgs",
+        "rev": "404c91792ee1d3556f0df371ac3cebadb2ba7af2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Echinoidea",
+        "ref": "swhkd",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1761672384,
@@ -74,7 +90,8 @@
       "inputs": {
         "aporetic-font": "aporetic-font",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_2",
+        "nixpkgs-swhkd": "nixpkgs-swhkd"
       }
     }
   },

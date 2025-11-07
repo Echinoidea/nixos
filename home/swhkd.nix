@@ -56,7 +56,7 @@
     m
     	~/dmenu-scripts/dmenu-mpc.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu power
-    p 
+    p
     	~/dmenu-scripts/dmenu-power.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu config
     c 
@@ -73,9 +73,12 @@
     # dmenu notes
     n
     	~/dmenu-scripts/dmenu-notes.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    # rsync backup
     s
     	~/dmenu-scripts/dmenu-rsync.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
-
+    # (linux) nixos
+    l
+      ~/dmenu-scripts/dmenu-nix.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     Escape
     	  echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
 
@@ -86,10 +89,10 @@
 
     # dmenu emacs open project
     p 
-    	~/dmenu-scripts/dmenu-emacs-project.sh && echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
+    	~/dmenu-scripts/dmenu-emacs-project.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
     # dmenu manage emacs
     m
-    	~/dmenu-scripts/dmenu-emacs-manage.sh && echo -n "normal" > ~/.config/waybar/swhkd-mode  && @escape
+    	~/dmenu-scripts/dmenu-emacs-manage.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode  && @escape
 
     Escape
     	  echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape

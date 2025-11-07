@@ -6,40 +6,6 @@
 }:
 
 let
-  swhkd = pkgs.rustPlatform.buildRustPackage {
-    pname = "swhkd";
-    version = "1.2.1";
-
-    src = pkgs.fetchFromGitHub {
-      owner = "waycrate";
-      repo = "swhkd";
-      rev = "1.2.1";
-      sha256 = "sha256-VQW01j2RxhLUx59LAopZEdA7TyZBsJrF1Ym3LumvFqA=";
-    };
-
-    cargoHash = "sha256-RGO9kEttGecllzH0gBIW6FnoSHGcrDfLDf2omUqKxX4=";
-
-    nativeBuildInputs = with pkgs; [
-      pkg-config
-      scdoc
-    ];
-    buildInputs = with pkgs; [ libevdev ];
-
-    postInstall = ''
-      if [ -d "docs" ]; then
-        mkdir -p $out/share/man/man1 $out/share/man/man5
-        find docs -name "*.1" -exec cp {} $out/share/man/man1/ \; 2>/dev/null || true
-        find docs -name "*.5" -exec cp {} $out/share/man/man5/ \; 2>/dev/null || true
-      fi
-    '';
-
-    meta = with pkgs.lib; {
-      description = "A simple hotkey daemon for Wayland";
-      homepage = "https://github.com/waycrate/swhkd";
-      license = licenses.bsd2;
-      platforms = platforms.linux;
-    };
-  };
 
   emacsPgtk = (
     (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
@@ -101,11 +67,19 @@ in
     "flakes"
   ];
 
+  nix.settings.trusted-users = [
+    "root"
+    "gabriel"
+  ];
+
+  # services.displayManager.lemurs.enable = true;
   services.displayManager.ly.enable = true;
 
   services.xserver = {
     enable = true;
     desktopManager.xfce.enable = true;
+    windowManager.berry.enable = true;
+    windowManager.herbstluftwm.enable = true;
     xkb = {
       layout = "us";
       variant = "";
@@ -121,14 +95,18 @@ in
     cmake
     libnotify
     vips # I dont remember why I need this...
-    kitty
+    kitty # Im using kitty because it works better with wallust
+    alacritty # Make sure to add cat wal sequences to zsh if using alacritty
     foot
     neovim
     inotify-tools
     gnumake
     sshpass
     jq # Required for my eww config, also good to just have
-    tiramisu
+    tiramisu # Dbus notifications - required for eww notifications
+    fzf
+    gnupg
+    pinentry-curses
     # Graphical Programs
     firefox
     nsxiv
@@ -136,6 +114,7 @@ in
     mpv
     vesktop
     eww
+    qutebrowser
     ## Wayland-specific Graphical Programs
     fuzzel
     swww
@@ -164,6 +143,8 @@ in
     ripgrep
     fd
     emacs-lsp-booster
+    # X11 Stuff
+    picom
     # Language dependencies
     python3 # Unfortunately...
     # GTK
@@ -172,6 +153,16 @@ in
     xdg-desktop-portal-gnome
     xwayland-satellite
   ];
+
+  services.pcscd.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
+  services.emacs = {
+    enable = true;
+  };
 
   programs.direnv.enable = true;
   programs.nix-ld.enable = true;

@@ -13,10 +13,12 @@
     ./home/xfce.nix
     ./home/firefox.nix
     ./home/kitty.nix
+    ./home/herbstluftwm.nix
   ];
 
   # User packages
   home.packages = with pkgs; [
+    devenv
     (pkgs.writeShellScriptBin "niri-spawn-left" ''
       #!/usr/bin/env bash
       kitty &
@@ -24,4 +26,6 @@
       niri msg action consume-or-expel-window-left
     '')
   ];
+
+  home.sessionPath = [ "$HOME/.config/emacs/bin/" ];
 }
