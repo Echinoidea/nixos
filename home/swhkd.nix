@@ -10,16 +10,16 @@
 
     mode leader swallow oneoff
 
-    # Emacs submenu
+    # +emacs
     e
     	@escape && @enter emacs && echo -n "emacs" > ~/.config/waybar/swhkd-mode 
-    # Dmenu submenu  
+    # +dmenu
     d
     	@escape && @enter dmenu && echo -n "dmenu" > ~/.config/waybar/swhkd-mode
-    # Open submenu
+    # +open program
     o
     	@escape && @enter open && echo -n "open" > ~/.config/waybar/swhkd-mode
-    # Dirvish submenu
+    # +dirvish
     y
     	@escape && @enter dirvish && echo -n "dirvish" > ~/.config/waybar/swhkd-mode
 
@@ -67,7 +67,7 @@
     # dmenu read book with zathura
     b
     	~/dmenu-scripts/dmenu-books.sh & echo -n "normal" > ~/.config/waybar/swhkd-mode && @escape
-    # dmenu emacs submenu
+    # +dmenu emacs
     e
     	@enter dmenu_emacs && echo -n "dmenu_emacs" > ~/.config/waybar/swhkd-mode 
     # dmenu notes

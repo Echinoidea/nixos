@@ -14,6 +14,7 @@
     ./home/firefox.nix
     ./home/kitty.nix
     ./home/herbstluftwm.nix
+    ./home/emacs.nix
   ];
 
   # User packages
@@ -26,6 +27,16 @@
       niri msg action consume-or-expel-window-left
     '')
   ];
+
+  services.emacs = {
+    enable = true;
+    package = (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
+      epkgs.treesit-grammars.with-all-grammars
+    ]);
+    client.enable = true;
+    defaultEditor = true;
+    socketActivation.enable = true; # This is key!
+  };
 
   home.sessionPath = [ "$HOME/.config/emacs/bin/" ];
 }

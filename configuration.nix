@@ -6,7 +6,6 @@
 }:
 
 let
-
   emacsPgtk = (
     (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
       epkgs.treesit-grammars.with-all-grammars
@@ -58,6 +57,15 @@ in
     shell = pkgs.zsh;
   };
 
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true; # Required for most Steam games
+    extraPackages = with pkgs; [
+      intel-media-driver # For newer Intel GPUs (Broadwell+)
+      intel-vaapi-driver # Fallback for older hardware
+    ];
+  };
+
   users.defaultUserShell = pkgs.bash;
 
   nixpkgs.config.allowUnfree = true;
@@ -88,6 +96,7 @@ in
 
   programs.niri.enable = true;
   programs.zsh.enable = true;
+  programs.adb.enable = true;
 
   environment.systemPackages = with pkgs; [
     # Utils
@@ -115,6 +124,7 @@ in
     vesktop
     eww
     qutebrowser
+    yad
     ## Wayland-specific Graphical Programs
     fuzzel
     swww
@@ -137,7 +147,8 @@ in
     yt-dlp
     vim
     wallust
-    yad
+    lynx
+    zoxide
     # Emacs and Emacs dependencies
     emacsPgtk
     ripgrep
@@ -151,17 +162,23 @@ in
     rose-pine-cursor
     # Other Wayland Stuff
     xdg-desktop-portal-gnome
+    xdg-desktop-portal-wlr
     xwayland-satellite
+    # steamcmd
+    # steam-tui
   ];
+
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true;
+  #   dedicatedServer.openFirewall = true;
+  #   gamescopeSession.enable = true;
+  # };
 
   services.pcscd.enable = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
-  };
-
-  services.emacs = {
-    enable = true;
   };
 
   programs.direnv.enable = true;
@@ -195,7 +212,29 @@ in
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    wlr.enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
+    ];
+    config = {
+      common = {
+        default = [
+          "wlr"
+          "gtk"
+          "gnome"
+        ];
+      };
+      niri = {
+        default = [
+          "wlr"
+          "gtk"
+          "gnome"
+        ];
+        "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+        "org.freedesktop.impl.portal.Screenshot" = "wlr";
+      };
+    };
   };
 
   programs.foot.enableZshIntegration = true;
