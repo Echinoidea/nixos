@@ -10,11 +10,11 @@
     ./home/fastfetch.nix
     ./home/starship.nix
     ./home/swhkd.nix
-    ./home/xfce.nix
+    # ./home/xfce.nix
     ./home/firefox.nix
     ./home/kitty.nix
-    ./home/herbstluftwm.nix
-    ./home/emacs.nix
+    # ./home/herbstluftwm.nix
+    # ./home/emacs.nix
   ];
 
   # User packages
@@ -32,9 +32,11 @@
     enable = true;
     package = (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
       epkgs.treesit-grammars.with-all-grammars
+      epkgs.vterm
     ]);
     client.enable = true;
     defaultEditor = true;
+    startWithUserSession = "graphical";
     socketActivation.enable = true; # This is key!
   };
 

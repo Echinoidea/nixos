@@ -51,6 +51,10 @@
 
     history.size = 10000;
 
+    sessionVariables = {
+      LSP_USE_PLISTS = "true";
+    };
+
     initContent = ''
       eval "$(starship init zsh)"
       # (cat ~/.cache/wal/sequences &)

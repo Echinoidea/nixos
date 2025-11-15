@@ -9,6 +9,7 @@ let
   emacsPgtk = (
     (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
       epkgs.treesit-grammars.with-all-grammars
+      epkgs.vterm
     ])
   );
 in
@@ -16,7 +17,7 @@ in
   imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
-    ./packages/chicago95.nix
+    # ./packages/chicago95.nix
   ];
 
   home-manager.useGlobalPkgs = true;
@@ -85,9 +86,14 @@ in
 
   services.xserver = {
     enable = true;
-    desktopManager.xfce.enable = true;
-    windowManager.berry.enable = true;
-    windowManager.herbstluftwm.enable = true;
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+
+      extraPackages = hpkgs: [
+        hpkgs.xmobar
+      ];
+    };
     xkb = {
       layout = "us";
       variant = "";
@@ -156,6 +162,10 @@ in
     emacs-lsp-booster
     # X11 Stuff
     picom
+    xdotool
+    xclip
+    xmobar
+    feh
     # Language dependencies
     python3 # Unfortunately...
     # GTK
@@ -188,6 +198,7 @@ in
 
   fonts.packages = with pkgs; [
     maple-mono.NF
+    nerd-fonts.fantasque-sans-mono
     nerd-fonts.symbols-only
     inputs.aporetic-font.packages.${pkgs.system}.default # access via flake.nix inputs
   ];
@@ -200,8 +211,8 @@ in
     network.listenAddress = "127.0.0.1";
     extraConfig = ''
       audio_output {
-        type "pipewire"
-        name "PipeWire Output"
+      type "pipewire"
+      name "PipeWire Output"
       }
     '';
   };
@@ -263,10 +274,10 @@ in
   security.polkit.enable = true;
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
-      if (action.id == "org.freedesktop.policykit.exec" &&
-          subject.isInGroup("wheel")) {
-        return polkit.Result.YES;
-      }
+    if (action.id == "org.freedesktop.policykit.exec" &&
+    subject.isInGroup("wheel")) {
+    return polkit.Result.YES;
+    }
     });
   '';
 
