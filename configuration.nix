@@ -94,6 +94,10 @@ in
       };
     };
 
+    windowManager.bspwm = {
+enable = true;
+    };
+
     xkb = {
       layout = "us";
       variant = "";
@@ -169,6 +173,7 @@ in
     dmenu
     st
     sxhkd
+    unclutter
     # Language dependencies
     python3 # Unfortunately...
     # GTK

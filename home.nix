@@ -13,6 +13,7 @@
     # ./home/xfce.nix
     ./home/firefox.nix
     ./home/kitty.nix
+    ./home/bspwm.nix
     # ./home/herbstluftwm.nix
     # ./home/emacs.nix
   ];

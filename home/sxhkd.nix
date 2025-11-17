@@ -1,4 +1,5 @@
 { config, pkgs, ... }:
+
 {
   # Install required packages
   home.packages = with pkgs; [
