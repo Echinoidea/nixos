@@ -28,17 +28,17 @@
     '')
   ];
 
-  services.emacs = {
-    enable = true;
-    package = (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
-      epkgs.treesit-grammars.with-all-grammars
-      epkgs.vterm
-    ]);
-    client.enable = true;
-    defaultEditor = true;
-    startWithUserSession = "graphical";
-    socketActivation.enable = true; # This is key!
-  };
+  # services.emacs = {
+  #   enable = true;
+  #   package = (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
+  #     epkgs.treesit-grammars.with-all-grammars
+  #     epkgs.vterm
+  #   ]);
+  #   client.enable = true;
+  #   defaultEditor = true;
+  #   startWithUserSession = "graphical";
+  #   # socketActivation.enable = true; # This is key!
+  # };
 
   home.sessionPath = [ "$HOME/.config/emacs/bin/" ];
 }

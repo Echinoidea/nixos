@@ -86,14 +86,37 @@ in
 
   services.xserver = {
     enable = true;
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
+    
+    windowManager.dwm.enable = true;
 
-      extraPackages = hpkgs: [
-        hpkgs.xmobar
+    windowManager.dwm.package = pkgs.dwm.override {
+      patches = [
+        # (pkgs.fetchpatch {
+        #   # tatami mat layout
+        #   url = "https://dwm.suckless.org/patches/tatami/dwm-tatami-6.2.diff";
+        #   hash = "sha256-J8BcsanKIflLW22FKYNEHBLMnOLTOM8pt9qt/8UlypA=";
+        # })
+
+        # (pkgs.fetchpatch {
+        #   # dwmc, like bspc
+        #   url = "https://dwm.suckless.org/patches/dwmc/dwm-dwmc-6.2.diff";
+        #   hash = "sha256-tHUQeHxxww87iW/dSzcgzFi4afPd67a8Wm8xtSO7vHE=";
+        # })
+        
+        # (pkgs.fetchpatch {
+        #   # vanity gaps
+        #   url = "https://dwm.suckless.org/patches/vanitygaps/dwm-vanitygaps-6.2.diff";
+        #   hash = "sha256-YLG+JQg3yCXpBFjp/0VCvDCVXE/4G7Kn5BFx7WyIsRw=";
+        # })
+
+        # (pkgs.fetchpatch {
+        #   # xresources
+        #   url = "https://dwm.suckless.org/patches/xresources/dwm-xresources-6.2.diff";
+        #   hash = "sha256-QDgav4jjr7aCmLhfWNppGcdN9IeGr7y+X2OrAfHoryI=";
+        # })
       ];
     };
+    
     xkb = {
       layout = "us";
       variant = "";
@@ -166,6 +189,9 @@ in
     xclip
     xmobar
     feh
+    dmenu
+    st
+    sxhkd
     # Language dependencies
     python3 # Unfortunately...
     # GTK
@@ -301,6 +327,36 @@ in
     enable = true;
     allowedTCPPorts = [ 3000 ];
   };
+
+  # Enable CUPS (for printing)
+  # services.printing = {
+  #   enable = true;
+  #   drivers = [
+  #     pkgs.brlaser # Open source Brother laser printer driver
+  #   ];
+  # };
+
+  # hardware.printers = {
+  #   ensurePrinters = [
+  #     {
+  #       name = "Brother_DCP_L2550DW";
+  #       location = "Home";
+  #       deviceUri = "dnssd://Brother%20DCP-L2550DW%20series._ipp._tcp.local/?uuid=e3248000-80ce-11db-8000-3c2af47f852a";
+  #       model = "everywhere"; # Driverless IPP
+  #       ppdOptions = {
+  #         PageSize = "Letter";
+  #       };
+  #     }
+  #   ];
+  #   ensureDefaultPrinter = "Brother_DCP_L2550DW";
+  # };
+
+  # # Enable network printer discovery
+  # services.avahi = {
+  #   enable = true;
+  #   nssmdns4 = true;
+  #   openFirewall = true;
+  # };
 
   system.stateVersion = "25.05";
 }
