@@ -86,37 +86,14 @@ in
 
   services.xserver = {
     enable = true;
-    
-    windowManager.dwm.enable = true;
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
 
-    windowManager.dwm.package = pkgs.dwm.override {
-      patches = [
-        # (pkgs.fetchpatch {
-        #   # tatami mat layout
-        #   url = "https://dwm.suckless.org/patches/tatami/dwm-tatami-6.2.diff";
-        #   hash = "sha256-J8BcsanKIflLW22FKYNEHBLMnOLTOM8pt9qt/8UlypA=";
-        # })
-
-        # (pkgs.fetchpatch {
-        #   # dwmc, like bspc
-        #   url = "https://dwm.suckless.org/patches/dwmc/dwm-dwmc-6.2.diff";
-        #   hash = "sha256-tHUQeHxxww87iW/dSzcgzFi4afPd67a8Wm8xtSO7vHE=";
-        # })
-        
-        # (pkgs.fetchpatch {
-        #   # vanity gaps
-        #   url = "https://dwm.suckless.org/patches/vanitygaps/dwm-vanitygaps-6.2.diff";
-        #   hash = "sha256-YLG+JQg3yCXpBFjp/0VCvDCVXE/4G7Kn5BFx7WyIsRw=";
-        # })
-
-        # (pkgs.fetchpatch {
-        #   # xresources
-        #   url = "https://dwm.suckless.org/patches/xresources/dwm-xresources-6.2.diff";
-        #   hash = "sha256-QDgav4jjr7aCmLhfWNppGcdN9IeGr7y+X2OrAfHoryI=";
-        # })
+      extraPackages = hpkgs: [
+        hpkgs.xmobar
       ];
     };
-    
     xkb = {
       layout = "us";
       variant = "";
