@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# dmenu theming
+prompt="-p Manual:"
+# source ./dmenu-theming
+
+# terminal to open manual
+terminal="alacritty"
+
+# list all manuals
+manual="$(man -k . | dmenu -l 10 $prompt | awk '{print $1}')"
+
+# open selected manual with terminal
+if [[ ! -z "$manual" ]]; then
+    eval "$($terminal -e man $manual)"
+fi
+
+exit 0
+
+

@@ -86,14 +86,14 @@ in
 
   services.xserver = {
     enable = true;
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
 
-      extraPackages = hpkgs: [
-        hpkgs.xmobar
-      ];
+    windowManager.dwm = {
+      enable = true;
+      package = pkgs.dwm.overrideAttrs {
+        src = ./config/dwm;
+      };
     };
+
     xkb = {
       layout = "us";
       variant = "";
