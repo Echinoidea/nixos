@@ -91,9 +91,7 @@
                   eww open bar-edp1 && eww open notification-window && eww open nixos-info-window
       }
 
-      hc() {
         herbstclient "$@"
-      }
 
 
       bindkey '^R' fzf-history-widget

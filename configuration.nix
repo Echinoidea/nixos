@@ -12,6 +12,14 @@ let
       epkgs.vterm
     ])
   );
+
+  emacsX = (
+    (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
+      epkgs.treesit-grammars.with-all-grammars
+      epkgs.vterm
+    ])
+  );
+
 in
 {
   imports = [
@@ -94,8 +102,21 @@ in
       };
     };
 
+    windowManager.herbstluftwm = {
+      enable = true;
+    };
+
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+
+      extraPackages = hpkgs: [
+        hpkgs.xmobar
+      ];
+    };
+
     windowManager.bspwm = {
-enable = true;
+      enable = true;
     };
 
     xkb = {
@@ -160,7 +181,7 @@ enable = true;
     lynx
     zoxide
     # Emacs and Emacs dependencies
-    emacsPgtk
+    emacsX
     ripgrep
     fd
     emacs-lsp-booster
@@ -170,12 +191,13 @@ enable = true;
     xclip
     xmobar
     feh
-    dmenu
-    st
     sxhkd
     unclutter
+    rofi
+    bsp-layout
+    bc # bsp-layout dependency
     # Language dependencies
-    python3 # Unfortunately...
+    python3
     # GTK
     rose-pine-cursor
     # Other Wayland Stuff
@@ -186,12 +208,12 @@ enable = true;
     # steam-tui
   ];
 
-  # programs.steam = {
-  #   enable = true;
-  #   remotePlay.openFirewall = true;
-  #   dedicatedServer.openFirewall = true;
-  #   gamescopeSession.enable = true;
-  # };
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    gamescopeSession.enable = true;
+  };
 
   services.pcscd.enable = true;
   programs.gnupg.agent = {
