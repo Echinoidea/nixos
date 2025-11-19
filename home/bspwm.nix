@@ -6,7 +6,7 @@
       pkill sxhkd
       sxhkd -m 1 &
 
-      xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --output DP-1 --mode 2560x1440 --rate 144 --pos 1920x0
+      xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --output DP-1 --mode 2560x1440 --rate 180 --pos 1920x0
       xset r rate 300 30
 
       source ~/.cache/wal/colors
@@ -33,44 +33,49 @@
       bspc config gapless_monocle true
       bspc config top_padding 36
 
-      bspc rule -a Gimp desktop='^8' state=floating follow=on
-      bspc rule -a Chromium desktop='^2'
-
       unclutter -idle 1 -jitter 2 -root &
-      /home/gabriel/dmenu-scripts-x/pywal-update.sh
+      # /home/gabriel/dmenu-scripts-x/pywal-update.sh
     '';
   };
 
   xdg.configFile."eww/scripts/bspwm-workspaces.sh" = {
+
     executable = true;
     text = ''
       #!/usr/bin/env bash
 
       get_workspaces() {
           focused=$(bspc query -D -d focused --names)
-          desktops=$(bspc query -D --names)
           
           workspaces="["
           first=true
           
-          for desktop in $desktops; do
-              if [ "$first" = false ]; then
-                  workspaces="$workspaces,"
-              fi
-              first=false
+          # Get all monitors and their desktops
+          while IFS= read -r monitor; do
+              desktops=$(bspc query -D -m "$monitor" --names)
               
-              if [ "$desktop" = "$focused" ]; then
-                  state="focused"
-              elif [ -n "$(bspc query -N -d "$desktop")" ]; then
-                  state="occupied"
-              elif [ -n "$(bspc query -N -d "$desktop" -n .urgent)" ]; then
-                  state="urgent"
-              else
-                  state="empty"
-              fi
-              
-              workspaces="$workspaces{\"name\":\"$desktop\",\"state\":\"$state\"}"
-          done
+              for desktop in $desktops; do
+                  if [ "$first" = false ]; then
+                      workspaces="$workspaces,"
+                  fi
+                  first=false
+                  
+                  # Check if this desktop is focused
+                  if [ "$desktop" = "$focused" ]; then
+                      state="focused"
+                  # Check if desktop has windows
+                  elif [ -n "$(bspc query -N -d "$desktop")" ]; then
+                      state="occupied"
+                  # Check for urgent windows
+                  elif [ -n "$(bspc query -N -d "$desktop" -n .urgent)" ]; then
+                      state="urgent"
+                  else
+                      state="empty"
+                  fi
+                  
+                  workspaces="$workspaces{\"name\":\"$desktop\",\"state\":\"$state\",\"monitor\":\"$monitor\"}"
+              done
+          done < <(bspc query -M --names)
           
           workspaces="$workspaces]"
           echo "$workspaces"

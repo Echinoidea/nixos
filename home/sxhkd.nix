@@ -1,175 +1,335 @@
-{ config, pkgs, ... }:
-
 {
-  # Install required packages
-  home.packages = with pkgs; [
-    sxhkd
-    xdotool
-    wmctrl
-    maim
-  ];
-
   # sxhkd configuration
   home.file.".config/sxhkd/sxhkdrc".text = ''
     #
-    # XFCE + sxhkd hotkeys (niri-inspired)
+    # wm independent hotkeys
     #
 
-    # Terminal emulator
+    # terminal emulator
+    super + shift + Return
+      emacsclient -c -a \'\' --eval \"(my/vterm-new)\"
+
     super + Return
-      foot
+    		alacritty
 
-    # Application launcher
-    super + d
-      
+    super + shift + equal
+    		bsp-layout next --layouts tall,wide,rwide,grid,even,tiled,monocle
 
-    # Close window
-    super + w
-      xdotool getactivewindow windowkill
+    super + shift + minus
+    		bsp-layout previous --layouts tall,wide,rwide,grid,even,tiled,monocle
 
-    # Reload sxhkd
-    super + Escape
+    super + space ; l ; t
+    		bsp-layout once tall
+
+    super + space ; l ; w
+    		bsp-layout once wide
+
+    super + space ; l ; e
+    		bsp-layout once even
+
+    super + space ; l ; g
+    		bsp-layout once grid
+
+    super + space ; l ; k
+    		bsp-layout once tiled
+
+
+    # program launcher
+    super + space ; space
+    	rofi -show drun
+
+    # make sxhkd reload its configuration files:
+    super + ctrl + r
       pkill -USR1 -x sxhkd
-
+    		
     #
-    # Window focus/movement (vim-like)
-    #
-
-    # Cycle windows (j/k for up/down in stack)
-    super + {j,k}
-      xdotool key {alt+Tab,alt+shift+Tab}
-
-    # Focus left/right workspace
-    super + {h,l}
-      xdotool set_desktop --relative {-1,1}
-
-    # Move window between workspaces left/right
-    super + shift + {h,l}
-      xdotool getactivewindow set_desktop_for_window $(xdotool getactivewindow) \
-        $(($(xdotool get_desktop) {-,+} 1))
-
-    # Move window up/down in stack (swap)
-    super + shift + {j,k}
-      xdotool key {alt+shift+Tab,alt+Tab}
-
-    #
-    # Window states
+    # bspwm hotkeys
     #
 
-    # Fullscreen
-    super + shift + f
-      wmctrl -r :ACTIVE: -b toggle,fullscreen
+    # quit/restart bspwm
+    super + alt + {q,r}
+    	bspc {quit,wm -r}
 
-    # Maximize
-    super + f
-      wmctrl -r :ACTIVE: -b toggle,maximized_vert,maximized_horz
+    # close window 
+    super + w
+      bspc node -c
 
-    # Toggle floating (unmaximize)
-    super + v
-      wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz
+    # alternate between the tiled and monocle layout
+    super + m
+    	bspc desktop -l next
 
-    #
-    # Workspace navigation
-    #
+    # send the newest marked node to the newest preselected node
+    super + y
+    	bspc node newest.marked.local -n newest.!automatic.local
 
-    # Switch to workspace 1-9
-    super + {1-9}
-      xdotool set_desktop {0-8}
-
-    # Move window to workspace 1-9
-    super + shift + {1-9}
-      xdotool getactivewindow set_desktop_for_window $(xdotool getactivewindow) {0-8}
-
-    # Focus next/previous workspace
-    super + {u,i}
-      xdotool set_desktop --relative {-1,1}
-
-    # Move window to next/previous workspace
-    super + ctrl + {u,i}
-      xdotool getactivewindow set_desktop_for_window $(xdotool getactivewindow) \
-        $(($(xdotool get_desktop) {-,+} 1))
+    # swap the current node and the biggest window
+    super + g
+    	bspc node -s biggest.window
 
     #
-    # Window resizing
+    # state/flags
     #
 
-    # Tile window to half screen
-    super + alt + h
-      wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz && \
-      wmctrl -r :ACTIVE: -e 0,0,0,960,1080
+    # set the window state
+    super + {t,shift + t,s,f}
+    	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
-    super + alt + l
-      wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz && \
-      wmctrl -r :ACTIVE: -e 0,960,0,960,1080
-
-    #
-    # Screenshots
-    #
-
-    Print
-      maim ~/Pictures/screenshots/xfce/Screenshot_$(date '+%Y-%m-%d_%H-%M-%S').png
-
-    ctrl + Print
-      maim -i $(xdotool getactivewindow) ~/Pictures/screenshots/xfce/Screenshot_$(date '+%Y-%m-%d_%H-%M-%S').png
-
-    alt + Print
-      maim -s ~/Pictures/screenshots/xfce/Screenshot_$(date '+%Y-%m-%d_%H-%M-%S').png
+    # set the node flags
+    super + ctrl + {m,x,y,z}
+    	bspc node -g {marked,locked,sticky,private}
 
     #
-    # Media keys
+    # focus/swap
     #
 
+    # focus the node in the given direction
+    super + {_,shift + }{h,j,k,l}
+    	bspc node -{f,s} {west,south,north,east}
+
+    # focus the node for the given path jump
+    super + {p,b,comma,period}
+    	bspc node -f @{parent,brother,first,second}
+
+    # focus the next/previous window in the current desktop
+    super + {_,shift + }n
+    	bspc node -f {next,prev}.local.!hidden.window
+
+    # focus the next/previous OCCUPIED desktop in the current monitor
+    super + bracket{left,right}
+    	bspc desktop -f {prev,next}.local.occupied
+
+    super + alt + bracket{left,right}
+    	bspc desktop -f {prev,next}.local
+
+    # Move window to the next/previous workspace and follow
+    super + shift + bracket{left,right}
+    	bspc node -d {prev,next}.local --follow
+
+    # focus the last node/desktop
+    super + {grave,Tab}
+    	bspc {node,desktop} -f last
+
+    # focus next monitor
+    super + shift + period
+      bspc monitor --focus next
+
+    # focus prev monitor
+    super + shift + comma
+      bspc monitor --focus prev
+
+    # focus the older or newer node in the focus history
+    super + {o,i}
+    	bspc wm -h off; \
+    	bspc node {older,newer} -f; \
+    	bspc wm -h on
+
+    # focus or send to the given desktop
+    super + {_,shift + }{1-9,0}
+    	bspc {desktop -f,node -d} '^{1-9,10}'
+
+    # send to desktop and follow it
+    super + shift + ctrl + {1-9,0}
+    	bspc node -d '^{1-9,10}' --follow
+
+    #
+    # preselect
+    #
+
+    # preselect the direction
+    super + ctrl + {h,j,k,l}
+    	bspc node -p {west,south,north,east}
+
+    # preselect the ratio
+    super + alt + {1-9}
+    	bspc node -o 0.{1-9}
+
+    # cancel the preselection for the focused node
+    super + ctrl + space
+    	bspc node -p cancel
+
+    # cancel the preselection for the focused desktop
+    super + ctrl + shift + space
+    	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+    #
+    # move/resize
+    #
+
+    # rotate windows
+    super + {_, shift + } + r
+    	bspc node @/ -C {forward,backward}
+
+    # expand a window by moving one of its side outward
+    super + alt + {h,j,k,l}
+    	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+    # contract a window by moving one of its side inward
+    super + alt + shift + {h,j,k,l}
+    	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+    # move a floating window
+    super + {Left,Down,Up,Right}
+    	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+
+    #
+    # extra
+    #
+
+    # show sxhkd help
+    super + slash
+    	  ~/.config/sxhkd/scripts/sxhkd-help.sh
+
+    # maim
+    super + Print
+       maim ~/Pictures/screenshots/bspwm/$(date '+%Y-%m-%d_%H-%M-%S').png
+
+    # main --select
+    super + shift + @Print
+       maim --select ~/Pictures/screenshots/bspwm/$(date '+%Y-%m-%d_%H-%M-%S').png
+
+    #
+    # Keychords
+    #
+
+    # dmenu M-x 
+    super + x 
+      ~/dmenu-scripts-x/dmenu-m-x.sh
+
+    # emacs org agenda
+    super + space ; e ; a
+      emacsclient -r -e "(org-agenda-list)"
+
+    # dmenu/emacs todo
+    super + space ; d ; t
+      ~/dmenu-scripts-x/dmenu-todo.sh
+
+    # dmenu yt-dlp
+    super + space ; d ; y
+    		notify-send "Hello"
+      # ~/dmenu-scripts-x/dmenu-ytdlp.sh
+
+    # dmenu mpc
+    super + space ; d ; m
+      ~/dmenu-scripts-x/dmenu-mpc.sh
+
+    # dmenu power
+    super + space ; d ; p 
+      /home/gabriel/dmenu-scripts-x/dmenu-power.sh
+
+    # dmenu config
+    super + space ; d ; c 
+      ~/dmenu-scripts-x/dmenu-dots.sh
+
+    # dmenu wal 
+    super + space ; d ; w 
+      /home/gabriel/dmenu-scripts-x/dmenu-wal.sh
+
+    # dmenu record screenshare
+    super + space ; d ; r 
+      ~/dmenu-scripts-x/dmenu-record.sh
+
+    # dmenu goto to window (bspwm)
+    super + space ; d ; g
+      ~/dmenu-scripts-x/dmenu-bspwm-goto-window.sh
+
+    # dmenu read book with zathura
+    super + space ; d ; b
+          ~/dmenu-scripts-x/dmenu-books.sh
+
+    # dmenu select soundcard
+    super + space ; d ; a
+          ~/dmenu-scripts-x/dmenu-soundcard.sh
+
+    super + space ; d ; Print
+          ~/dmenu-scripts-x/dmenu-screenshot.sh
+
+    # 
+    # emacs
+    # 
+
+    # emacsclient
+    super + space ; o ; e 
+      emacsclient -a \'\' -c
+
+
+    # emacs open calendar
+    super + space ; e ; c
+      emacsclient -r -e \"(=calendar)\"
+
+    # # emacs everywhere
+    # super + e
+    #   emacsclient --eval "(emacs-everywhere)"
+
+    # dmenu emacs open project
+    super + space ; d ; e ; p 
+      ~/dmenu-scripts-x/dmenu-emacs-project.sh
+
+    # dmenu manage emacs
+    super + space ; d ; e ; m
+      ~/dmenu-scripts-x/dmenu-emacs-manage.sh
+
+    # dmenu notes
+    super + space ; d ; n
+      ~/dmenu-scripts-x/dmenu-notes.sh
+
+    #
+    # dirvish
+    # 
+
+    # dirvish wallpapers
+    super + space ; y ; w 
+      emacsclient -c -e "(dirvish \"~/Pictures/wallpapers/\")"
+
+    # dirvish documents
+    super + space ; y ; d 
+      emacsclient -c -e "(dirvish \"~/Documents/\")"
+
+    # dirvish pictures
+    super + space ; y ; p 
+      emacsclient -c -e "(dirvish \"~/Pictures/\")"
+
+    # dirvish books
+    super + space ; y ; b 
+      emacsclient -c -e "(dirvish \"~/Documents/books\")"
+
+    # dirvish videos
+    super + space ; y ; v
+      emacsclient -c -e "(dirvish \"~/Videos\")"
+
+    #
+    # open program
+    #
+
+    # firefox
+    super + space ; o ; f
+      firefox
+
+    # discord
+    super + space ; o ; d
+      discord 
+
+    # rmpc
+    super + space ; o ; m
+      st -e bash -c 'cat ~/.cache/wal/sequences && rmpc'
+
+
+    # volume and brightness control
+
+    # volume up
     XF86AudioRaiseVolume
-      wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+
+      pactl set-sink-volume @DEFAULT_SINK@ +2%
 
+    # volume down
     XF86AudioLowerVolume
-      wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-
+      pactl set-sink-volume @DEFAULT_SINK@ -2%
 
-    XF86AudioMute
-      wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-
-    XF86AudioMicMute
-      wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-
+    # brightness up
     XF86MonBrightnessUp
-      brightnessctl --class=backlight set +10%
+      brightnessctl set +10%
 
+    # brightness down
     XF86MonBrightnessDown
-      brightnessctl --class=backlight set 10%-
-
-    #
-    # Lock screen
-    #
-
-    super + alt + l
-      xflock4
-
-    #
-    # Custom keychords
-    #
-
-    # dmenu M-x
-    super + x
-      ~/dmenu-scripts/dmenu-m-x.sh
-
-    # Help overlay
-    super + shift + slash
-      ~/.config/sxhkd/scripts/sxhkd-help.sh
-  '';
-
-  # Autostart sxhkd
-  home.file.".config/autostart/sxhkd.desktop".text = ''
-    [Desktop Entry]
-    Type=Application
-    Name=sxhkd
-    Exec=${pkgs.sxhkd}/bin/sxhkd
-    Hidden=false
-    NoDisplay=false
-    X-GNOME-Autostart-enabled=true
-  '';
-
-  # Create screenshots directory
-  home.activation.createScreenshotDir = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p $HOME/Pictures/screenshots/xfce
+      brightnessctl set 10%-
   '';
 }

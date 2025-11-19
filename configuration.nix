@@ -154,6 +154,7 @@ in
     mpv
     vesktop
     eww
+    quickshell
     qutebrowser
     yad
     ## Wayland-specific Graphical Programs
@@ -200,6 +201,7 @@ in
     python3
     # GTK
     rose-pine-cursor
+    adwaita-icon-theme
     # Other Wayland Stuff
     xdg-desktop-portal-gnome
     xdg-desktop-portal-wlr
