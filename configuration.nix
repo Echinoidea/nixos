@@ -6,13 +6,6 @@
 }:
 
 let
-  emacsPgtk = (
-    (pkgs.emacsPackagesFor pkgs.emacs-pgtk).emacsWithPackages (epkgs: [
-      epkgs.treesit-grammars.with-all-grammars
-      epkgs.vterm
-    ])
-  );
-
   emacsX = (
     (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
       epkgs.treesit-grammars.with-all-grammars
@@ -95,6 +88,20 @@ in
   services.xserver = {
     enable = true;
 
+    libinput = {
+      enable = true;
+      touchpad = {
+        disableWhileTyping = true; # Disables touchpad briefly while typing
+
+        additionalOptions = ''
+          Option "PalmDetection" "on"
+          Option "PalmMinWidth" "8"
+          Option "PalmMinZ" "100"
+        '';
+      };
+
+    };
+
     windowManager.dwm = {
       enable = true;
       package = pkgs.dwm.overrideAttrs {
@@ -102,18 +109,18 @@ in
       };
     };
 
-    windowManager.herbstluftwm = {
-      enable = true;
-    };
+    # windowManager.herbstluftwm = {
+    #   enable = true;
+    # };
 
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
+    # windowManager.xmonad = {
+    #   enable = true;
+    #   enableContribAndExtras = true;
 
-      extraPackages = hpkgs: [
-        hpkgs.xmobar
-      ];
-    };
+    #   extraPackages = hpkgs: [
+    #     hpkgs.xmobar
+    #   ];
+    # };
 
     windowManager.bspwm = {
       enable = true;
@@ -125,7 +132,7 @@ in
     };
   };
 
-  programs.niri.enable = true;
+  # programs.niri.enable = true;
   programs.zsh.enable = true;
   programs.adb.enable = true;
 
@@ -137,7 +144,6 @@ in
     vips # I dont remember why I need this...
     kitty # Im using kitty because it works better with wallust
     alacritty # Make sure to add cat wal sequences to zsh if using alacritty
-    foot
     neovim
     inotify-tools
     gnumake
@@ -154,16 +160,11 @@ in
     mpv
     vesktop
     eww
-    quickshell
     qutebrowser
     yad
-    ## Wayland-specific Graphical Programs
-    fuzzel
-    swww
-    waybar
     # CLI Programs
     fastfetch
-    wl-clipboard
+    # wl-clipboard
     brightnessctl
     pywal
     starship
@@ -190,7 +191,7 @@ in
     picom
     xdotool
     xclip
-    xmobar
+    # xmobar
     feh
     sxhkd
     unclutter
@@ -202,12 +203,8 @@ in
     # GTK
     rose-pine-cursor
     adwaita-icon-theme
-    # Other Wayland Stuff
-    xdg-desktop-portal-gnome
-    xdg-desktop-portal-wlr
-    xwayland-satellite
-    # steamcmd
-    # steam-tui
+    steamcmd
+    steam-tui
   ];
 
   programs.steam = {
@@ -253,32 +250,32 @@ in
     XDG_RUNTIME_DIR = "/run/user/1000";
   };
 
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
-    ];
-    config = {
-      common = {
-        default = [
-          "wlr"
-          "gtk"
-          "gnome"
-        ];
-      };
-      niri = {
-        default = [
-          "wlr"
-          "gtk"
-          "gnome"
-        ];
-        "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-        "org.freedesktop.impl.portal.Screenshot" = "wlr";
-      };
-    };
-  };
+  # xdg.portal = {
+  #   enable = true;
+  #   wlr.enable = true;
+  #   extraPortals = with pkgs; [
+  #     xdg-desktop-portal-gtk
+  #     xdg-desktop-portal-wlr
+  #   ];
+  #   config = {
+  #     common = {
+  #       default = [
+  #         "wlr"
+  #         "gtk"
+  #         "gnome"
+  #       ];
+  #     };
+  #     niri = {
+  #       default = [
+  #         "wlr"
+  #         "gtk"
+  #         "gnome"
+  #       ];
+  #       "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+  #       "org.freedesktop.impl.portal.Screenshot" = "wlr";
+  #     };
+  #   };
+  # };
 
   programs.foot.enableZshIntegration = true;
 

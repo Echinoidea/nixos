@@ -33,10 +33,9 @@
     super + space ; l ; k
     		bsp-layout once tiled
 
-
     # program launcher
     super + space ; space
-    	rofi -show drun
+    	emacsclient -s emenu -c -F '((name . "emenu-drun") (minibuffer . only) (width . 100) (height . 1) (undecorated . t))' -e '(emenu-drun)'
 
     # make sxhkd reload its configuration files:
     super + ctrl + r
@@ -155,9 +154,14 @@
     # move/resize
     #
 
-    # rotate windows
+    # # rotate windows
+    # super + {_, shift + } + r
+    # 	bspc node @/ -C {forward,backward} --focus
+
     super + {_, shift + } + r
-    	bspc node @/ -C {forward,backward}
+        id=$(bspc query -N -n focused); \
+        bspc node @/ -C {forward,backward}; \
+        bspc node $id -f
 
     # expand a window by moving one of its side outward
     super + alt + {h,j,k,l}
@@ -273,6 +277,10 @@
     super + space ; d ; n
       ~/dmenu-scripts-x/dmenu-notes.sh
 
+    super + space ; e ; u
+       emacsclient -s emenu -c -F '((name . "emenu-url") (minibuffer . only) (width . 100) (height . 1) (undecorated . t))' -e '(emenu-url)'
+
+
     #
     # dirvish
     # 
@@ -307,11 +315,11 @@
 
     # discord
     super + space ; o ; d
-      discord 
+      vesktop
 
     # rmpc
     super + space ; o ; m
-      st -e bash -c 'cat ~/.cache/wal/sequences && rmpc'
+      kitty -e bash -c 'cat ~/.cache/wal/sequences && rmpc'
 
 
     # volume and brightness control

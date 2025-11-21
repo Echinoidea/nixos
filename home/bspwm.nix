@@ -6,6 +6,9 @@
       pkill sxhkd
       sxhkd -m 1 &
 
+      emacs --daemon
+      emacs --daemon=emenu
+
       xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --output DP-1 --mode 2560x1440 --rate 180 --pos 1920x0
       xset r rate 300 30
 
@@ -20,6 +23,10 @@
       else
          bspc monitor eDP-1 -d 1 2 3 4 5
       fi
+
+      bspc rule -a Emacs:emenu-drun state=floating center=true rectangle=800x200+0+0
+      bspc rule -a Emacs:emenu-url state=floating center=true rectangle=800x200+0+0
+
 
       bspc config border_width 0
       bspc config window_gap 8
