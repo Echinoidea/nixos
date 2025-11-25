@@ -7,7 +7,7 @@
 
     # terminal emulator
     super + shift + Return
-      emacsclient -c -a \'\' --eval \"(my/vterm-new)\"
+      emacsclient -s emenu -c -a ' ' --eval '(my/vterm-new)'
 
     super + Return
     		alacritty

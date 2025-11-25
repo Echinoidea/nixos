@@ -85,14 +85,12 @@ in
   # services.displayManager.lemurs.enable = true;
   services.displayManager.ly.enable = true;
 
-  services.xserver = {
-    enable = true;
-
-    libinput = {
-      enable = true;
+  services.libinput = {
       touchpad = {
         disableWhileTyping = true; # Disables touchpad briefly while typing
+        sendEventsMode = "disabled-on-external-mouse";
 
+        
         additionalOptions = ''
           Option "PalmDetection" "on"
           Option "PalmMinWidth" "8"
@@ -100,8 +98,22 @@ in
         '';
       };
 
-    };
 
+
+  };
+  
+  services.xserver = {
+    enable = true;
+
+inputClassSections = [
+    ''
+      Identifier "touchpad"
+      Driver "libinput"
+      MatchIsTouchpad "on"
+      Option "SendEventsMode" "disabled-on-external-mouse"
+    ''
+  ];
+    
     windowManager.dwm = {
       enable = true;
       package = pkgs.dwm.overrideAttrs {
@@ -187,6 +199,7 @@ in
     ripgrep
     fd
     emacs-lsp-booster
+    ispell
     # X11 Stuff
     picom
     xdotool
@@ -223,7 +236,13 @@ in
   programs.direnv.enable = true;
   programs.nix-ld.enable = true;
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+
+    enable = true;
+
+    liveRestore = false;
+    # extraOptions = "--shutdown-timeout=10";
+  };
 
   fonts.packages = with pkgs; [
     maple-mono.NF
