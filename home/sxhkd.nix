@@ -1,4 +1,97 @@
 {
+  home.file.".config/sxhkd/scripts/start-sxhkd.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+
+      # Start sxhkd with status FIFO for keychord tracking
+      export XDG_RUNTIME_DIR="/run/user/1000/"
+      export SXHKD_FIFO="$XDG_RUNTIME_DIR/sxhkd.fifo"
+
+      declare -a proc=("sxhkd" "sxhkd-status-watch" "sxhkd-bindings-update")
+
+      # Terminate existing sxhkd and related scripts
+      if [[ -n $(pidof sxhkd) ]]; then
+          for i in "''${proc[@]}"; do
+              kill -15 "$(ps -ef \
+              | grep "$i" \
+              | awk 'NR==1 {print $2}')" >/dev/null 2>&1
+              # Wait until the processes have been shut down
+              while pidof -x "$i" >/dev/null; do
+                  sleep 0.2
+                  break
+              done
+          done
+      fi
+
+      # Remove old FIFO if it exists
+      [[ -e $SXHKD_FIFO ]] && rm -f "$SXHKD_FIFO"
+      sleep 0.5
+
+      if [[ -n $(pidof bspwm) ]]; then
+          # Create FIFO
+          mkfifo "$SXHKD_FIFO"
+          
+          # Launch sxhkd with status output (-t 5 sets timeout for chord chains)
+          sxhkd -t 5 \
+              -s "$SXHKD_FIFO" \
+              -c "$HOME/.config/sxhkd/sxhkdrc" &
+          
+          # Start the bindings updater
+          "$HOME/.config/eww/scripts/sxhkd-bindings-update.sh" &
+          
+          notify-send 'sxhkd' 'hotkeys daemon ready'
+      else
+          exit 127
+      fi
+
+      exit
+    '';
+  };
+
+  home.file.".config/sxhkd/scripts/sxhkd-status-watch.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+
+      # Watch sxhkd status FIFO and output mode for eww
+      # The FIFO path should match what sxhkd was started with
+
+      XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/1000}"
+      FIFO="$XDG_RUNTIME_DIR/sxhkd.fifo"
+
+      # Initial state
+      echo "normal"
+
+      # Read from the FIFO and parse keychord state
+      while IFS= read -r line; do
+          # SXHKD outputs lines like:
+          # H<hotkey>  - when a chord is being built (e.g., "Hsuper + space ")
+          # E<hotkey>  - when a hotkey is executed
+          # C<count>   - when chord ends
+          
+          if [[ "$line" =~ ^H ]]; then
+              # Extract the hotkey being built
+              hotkey="''${line#H}"
+              
+              # Parse the mode from the hotkey
+              # "super + space " -> initial keychord state
+              if [[ "$hotkey" =~ super\ \+\ space\ \;\ ([^\ ]+) ]]; then
+                  # Second level chord: "super + space ; d" -> mode "d"
+                  mode="''${BASH_REMATCH[1]}"
+                  echo "$mode"
+              elif [[ "$hotkey" =~ super\ \+\ space\ $ ]]; then
+                  # First level: just "super + space " pressed
+                  echo "space"
+              fi
+          elif [[ "$line" =~ ^E ]] || [[ "$line" =~ ^C ]]; then
+              # Command executed or chord ended - return to normal
+              echo "normal"
+          fi
+      done < "$FIFO"
+    '';
+  };
+
   # sxhkd configuration
   home.file.".config/sxhkd/sxhkdrc".text = ''
     #

@@ -12,13 +12,14 @@
       nso = "sudo nix-store --optimize -vv";
       ngc = "sudo nix-collect-garbage -d";
 
+      xcopy = "xclip -sel clipboard";
+      
       # emacs
       ecnw = "emacsclient --no-window";
 
       fucking = "sudo";
-      x = "wl-copy";
       dnb = "mpv --really-quiet https://dnbradio.com/hi.pls &";
-      start-swhkd = "pkexec env XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR XDG_CONFIG_HOME=$XDG_CONFIG_HOME swhkd -c ~/.config/swhkd/swhkdrc;";
+      # start-swhkd = "pkexec env XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR XDG_CONFIG_HOME=$XDG_CONFIG_HOME swhkd -c ~/.config/swhkd/swhkdrc;";
     };
 
     history.size = 10000;

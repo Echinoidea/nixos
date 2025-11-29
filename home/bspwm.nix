@@ -4,12 +4,25 @@
     text = ''
       #!/usr/bin/env sh
       pkill sxhkd
-      sxhkd -m 1 &
+
+      xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --output DP-1 --mode 2560x1440 --rate 143.97 --pos 1920x0
 
       emacs --daemon
       emacs --daemon=emenu
 
-      xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --output DP-1 --mode 2560x1440 --rate 180 --pos 1920x0
+      ~/.config/sxhkd/scripts/start-sxhkd.sh &
+
+      if xrandr -q | grep -q "DP-1 connected"; then
+         eww open bar-dp1
+         eww open which-key-popup-dp1
+         eww open notification-window
+      elif xrandr -q | grep -q "eDP-1 connected"; then
+        eww open bar-edp1
+        eww open which-key-popup-edp1
+      fi
+
+      ~/.config/eww/scripts/notif-listener.sh &
+
       xset r rate 300 30
 
       source ~/.cache/wal/colors
@@ -26,7 +39,6 @@
 
       bspc rule -a Emacs:emenu-drun state=floating center=true rectangle=800x200+0+0
       bspc rule -a Emacs:emenu-url state=floating center=true rectangle=800x200+0+0
-
 
       bspc config border_width 0
       bspc config window_gap 8
@@ -46,7 +58,6 @@
   };
 
   xdg.configFile."eww/scripts/bspwm-workspaces.sh" = {
-
     executable = true;
     text = ''
       #!/usr/bin/env bash

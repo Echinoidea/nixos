@@ -204,6 +204,8 @@ inputClassSections = [
     picom
     xdotool
     xclip
+    simplescreenrecorder
+    maim
     # xmobar
     feh
     sxhkd

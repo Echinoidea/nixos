@@ -16,6 +16,7 @@
     # ./home/herbstluftwm.nix
     ./home/sxhkd.nix
     # ./home/emacs.nix
+    # ./home/eww.nix
   ];
 
   # User packages
