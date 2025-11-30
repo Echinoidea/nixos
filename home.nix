@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, inputs, ... }:
 {
   home.stateVersion = "25.05";
 
@@ -16,7 +15,7 @@
     ./home/bspwm.nix
     # ./home/herbstluftwm.nix
     ./home/sxhkd.nix
-    # ./home/emacs.nix
+    ./home/emacs.nix
     # ./home/eww.nix
   ];
 

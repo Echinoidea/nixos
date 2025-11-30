@@ -4,26 +4,35 @@
   inputs,
   ...
 }:
-
 let
-  emacsX = (
-    (pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
-      epkgs.treesit-grammars.with-all-grammars
-      epkgs.vterm
-    ])
-  );
-
+  nurNoPkgs = import inputs.nur { pkgs = null; nurpkgs = pkgs; };
 in
 {
   imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
-    # ./packages/chicago95.nix
   ];
 
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  home-manager.users.gabriel = import ./home.nix;
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+      sha256 = "sha256:18bygzs3qm0shi0gijbbn3f9r35f58ps5lgh0cgca38gkldz49rv";
+    }))
+
+    inputs.nur.overlays.default
+  ];
+  
+  services.emacs.package = pkgs.emacs-unstable;
+  services.emacs.enable = true;
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    # extraSpecialArgs = { inherit (inputs) nur; };  # Pass nur to home-manager
+    users.gabriel = {
+      imports = [ ./home.nix nurNoPkgs.repos.rycee.hmModules.emacs-init ];
+    };
+  };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -191,7 +200,6 @@ in
     lynx
     zoxide
     # Emacs and Emacs dependencies
-    emacsX
     ripgrep
     fd
     emacs-lsp-booster
@@ -219,7 +227,7 @@ in
   ];
 
   stylix.enable = true;
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
 
   stylix.fonts = {
     sizes.applications = 8;
