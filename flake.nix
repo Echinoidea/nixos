@@ -10,7 +10,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixpkgs-swhkd.url = "github:Echinoidea/nixpkgs/swhkd";
+    # nixpkgs-swhkd.url = "github:Echinoidea/nixpkgs/swhkd";
+
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -18,7 +28,8 @@
       self,
       nixpkgs,
       aporetic-font,
-      nixpkgs-swhkd,
+      stylix,
+      nur,
       ...
     }@inputs:
     {
@@ -26,17 +37,9 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; }; # Pass inputs to modules
         modules = [
+          stylix.nixosModules.stylix
           ./configuration.nix
-          (
-            { pkgs, ... }:
-            {
-              nixpkgs.overlays = [
-                (final: prev: {
-                  swhkd = nixpkgs-swhkd.legacyPackages.${prev.system}.swhkd;
-                })
-              ];
-            }
-          )
+          nur.modules.nixos.default
         ];
       };
 

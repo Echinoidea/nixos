@@ -86,34 +86,31 @@ in
   services.displayManager.ly.enable = true;
 
   services.libinput = {
-      touchpad = {
-        disableWhileTyping = true; # Disables touchpad briefly while typing
-        sendEventsMode = "disabled-on-external-mouse";
+    touchpad = {
+      disableWhileTyping = true; # Disables touchpad briefly while typing
+      sendEventsMode = "disabled-on-external-mouse";
 
-        
-        additionalOptions = ''
-          Option "PalmDetection" "on"
-          Option "PalmMinWidth" "8"
-          Option "PalmMinZ" "100"
-        '';
-      };
-
-
+      additionalOptions = ''
+        Option "PalmDetection" "on"
+        Option "PalmMinWidth" "8"
+        Option "PalmMinZ" "100"
+      '';
+    };
 
   };
-  
+
   services.xserver = {
     enable = true;
 
-inputClassSections = [
-    ''
-      Identifier "touchpad"
-      Driver "libinput"
-      MatchIsTouchpad "on"
-      Option "SendEventsMode" "disabled-on-external-mouse"
-    ''
-  ];
-    
+    inputClassSections = [
+      ''
+        Identifier "touchpad"
+        Driver "libinput"
+        MatchIsTouchpad "on"
+        Option "SendEventsMode" "disabled-on-external-mouse"
+      ''
+    ];
+
     windowManager.dwm = {
       enable = true;
       package = pkgs.dwm.overrideAttrs {
@@ -182,7 +179,6 @@ inputClassSections = [
     starship
     ffmpeg
     openssl
-    swhkd
     btop
     rmpc
     cava
@@ -221,6 +217,33 @@ inputClassSections = [
     steamcmd
     steam-tui
   ];
+
+  stylix.enable = true;
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
+
+  stylix.fonts = {
+    sizes.applications = 8;
+
+    serif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Serif";
+    };
+
+    sansSerif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans";
+    };
+
+    monospace = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans Mono";
+    };
+
+    emoji = {
+      package = pkgs.noto-fonts-color-emoji;
+      name = "Noto Color Emoji";
+    };
+  };
 
   programs.steam = {
     enable = true;

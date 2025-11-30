@@ -1,4 +1,8 @@
 {
+  xsession.windowManager.bspwm = {
+    enable = true;
+  };
+  
   xdg.configFile."bspwm/bspwmrc" = {
     executable = true;
     text = ''
@@ -40,13 +44,13 @@
       bspc rule -a Emacs:emenu-drun state=floating center=true rectangle=800x200+0+0
       bspc rule -a Emacs:emenu-url state=floating center=true rectangle=800x200+0+0
 
-      bspc config border_width 0
+      bspc config border_width 2
       bspc config window_gap 8
       bspc config pointer_follows_focus true
       bspc config pointer_follows_monitor true
       bspc config focus_follows_pointer true
-      bspc config focused_border_color "$(sed -n '3p' ~/.cache/wal/colors)"
-      bspc config normal_border_color "$(sed -n '1p' ~/.cache/wal/colors)"
+      # bspc config focused_border_color "$(sed -n '3p' ~/.cache/wal/colors)"
+      # bspc config normal_border_color "$(sed -n '1p' ~/.cache/wal/colors)"
       bspc config split_ratio 0.52
       bspc config borderless_monocle true
       bspc config gapless_monocle true

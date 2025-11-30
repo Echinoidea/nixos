@@ -6,12 +6,13 @@
   imports = [
     ./home/git.nix
     ./home/zsh.nix
-    ./home/foot.nix
+    ./home/alacritty.nix
+    # ./home/foot.nix
     ./home/fastfetch.nix
     ./home/starship.nix
     ./home/swhkd.nix
     ./home/firefox.nix
-    ./home/kitty.nix
+    # ./home/kitty.nix
     ./home/bspwm.nix
     # ./home/herbstluftwm.nix
     ./home/sxhkd.nix
