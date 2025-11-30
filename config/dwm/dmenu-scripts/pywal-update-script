@@ -1,4 +1,0 @@
-#!/bin/sh
-
-xrdb -merge ~/.cache/wal/Xresources
-killall dwm

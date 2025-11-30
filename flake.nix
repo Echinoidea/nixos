@@ -21,6 +21,10 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # nixcord = {
+    #   url = "github:kaylorben/nixcord";
+    # };
   };
 
   outputs =
@@ -30,6 +34,8 @@
       aporetic-font,
       stylix,
       nur,
+      # nixcord,
+      # home-manager,
       ...
     }@inputs:
     {
@@ -42,6 +48,5 @@
           nur.modules.nixos.default
         ];
       };
-
     };
 }

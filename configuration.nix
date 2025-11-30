@@ -28,7 +28,6 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    # extraSpecialArgs = { inherit (inputs) nur; };  # Pass nur to home-manager
     users.gabriel = {
       imports = [ ./home.nix nurNoPkgs.repos.rycee.hmModules.emacs-init ];
     };
@@ -120,26 +119,6 @@ in
       ''
     ];
 
-    windowManager.dwm = {
-      enable = true;
-      package = pkgs.dwm.overrideAttrs {
-        src = ./config/dwm;
-      };
-    };
-
-    # windowManager.herbstluftwm = {
-    #   enable = true;
-    # };
-
-    # windowManager.xmonad = {
-    #   enable = true;
-    #   enableContribAndExtras = true;
-
-    #   extraPackages = hpkgs: [
-    #     hpkgs.xmobar
-    #   ];
-    # };
-
     windowManager.bspwm = {
       enable = true;
     };
@@ -150,7 +129,6 @@ in
     };
   };
 
-  # programs.niri.enable = true;
   programs.zsh.enable = true;
   programs.adb.enable = true;
 
@@ -228,7 +206,9 @@ in
 
   stylix.enable = true;
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/brushtrees-dark.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/embers-light.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/darkviolet.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/chicago-day.yaml";
 
   stylix.fonts = {
     sizes.applications = 8;
@@ -271,11 +251,8 @@ in
   programs.nix-ld.enable = true;
 
   virtualisation.docker = {
-
     enable = true;
-
     liveRestore = false;
-    # extraOptions = "--shutdown-timeout=10";
   };
 
   fonts.packages = with pkgs; [
@@ -302,35 +279,6 @@ in
   systemd.services.mpd.environment = {
     XDG_RUNTIME_DIR = "/run/user/1000";
   };
-
-  # xdg.portal = {
-  #   enable = true;
-  #   wlr.enable = true;
-  #   extraPortals = with pkgs; [
-  #     xdg-desktop-portal-gtk
-  #     xdg-desktop-portal-wlr
-  #   ];
-  #   config = {
-  #     common = {
-  #       default = [
-  #         "wlr"
-  #         "gtk"
-  #         "gnome"
-  #       ];
-  #     };
-  #     niri = {
-  #       default = [
-  #         "wlr"
-  #         "gtk"
-  #         "gnome"
-  #       ];
-  #       "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-  #       "org.freedesktop.impl.portal.Screenshot" = "wlr";
-  #     };
-  #   };
-  # };
-
-  programs.foot.enableZshIntegration = true;
 
   environment.variables = {
     XCURSOR_THEME = "BreezeX-RosePineDawn-Linux";

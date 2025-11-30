@@ -1,4 +1,9 @@
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 {
   home.stateVersion = "25.05";
 
@@ -6,29 +11,20 @@
     ./home/git.nix
     ./home/zsh.nix
     ./home/alacritty.nix
-    # ./home/foot.nix
     ./home/fastfetch.nix
     ./home/starship.nix
     ./home/swhkd.nix
     ./home/firefox.nix
-    # ./home/kitty.nix
     ./home/bspwm.nix
-    # ./home/herbstluftwm.nix
     ./home/sxhkd.nix
-    ./home/emacs.nix
+    ./home/emacs
+    ./home/btop
+    ./home/vesktop
+    ./home/zathura
+
     # ./home/eww.nix
+    ./dev
   ];
 
-  # User packages
-  # home.packages = with pkgs; [
-  #   devenv
-  #   (pkgs.writeShellScriptBin "niri-spawn-left" ''
-  #     #!/usr/bin/env bash
-  #     kitty &
-  #     sleep 0.1
-  #     niri msg action consume-or-expel-window-left
-  #   '')
-  # ];
-  
   home.sessionPath = [ "$HOME/.config/emacs/bin/" ];
 }
