@@ -227,7 +227,8 @@ in
   ];
 
   stylix.enable = true;
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/brushtrees-dark.yaml";
 
   stylix.fonts = {
     sizes.applications = 8;
@@ -413,5 +414,10 @@ in
   #   openFirewall = true;
   # };
 
+  nix.settings = {
+    max-jobs = "auto";
+    cores = 0;
+  };
+  
   system.stateVersion = "25.05";
 }
