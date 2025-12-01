@@ -411,23 +411,23 @@
   (centaur-tabs-group-by-projectile-project)
   (centaur-tabs-mode t))
 
-(use-package zoom
-  :straight t
-  :custom
-  (zoom-size '(0.618 . 0.618))
-  (zoom-minibuffer-preserve-layout t)
+;; (use-package zoom
+;;   :straight t
+;;   :custom
+;;   (zoom-size '(0.618 . 0.618))
+;;   (zoom-minibuffer-preserve-layout t)
   
-  :config
-  ;; Set all ignore rules BEFORE enabling zoom-mode
-  (setq zoom-ignored-major-modes '(dired-mode markdown-mode which-key-mode vundo-mode))
-  (setq zoom-ignored-buffer-names '("zoom.el" "*lsp-ui-imenu*" " *vundo tree*" " *Help*" "*Help*"))
-  (setq zoom-ignored-buffer-name-regexps '("^lsp-ui"))
-  (setq zoom-ignore-predicates 
-        '((lambda () 
-            (string-match-p " \\*which-key\\*" (buffer-name)))))
+;;   :config
+;;   ;; Set all ignore rules BEFORE enabling zoom-mode
+;;   (setq zoom-ignored-major-modes '(dired-mode markdown-mode which-key-mode vundo-mode))
+;;   (setq zoom-ignored-buffer-names '("zoom.el" "*lsp-ui-imenu*" " *vundo tree*" " *Help*" "*Help*"))
+;;   (setq zoom-ignored-buffer-name-regexps '("^lsp-ui"))
+;;   (setq zoom-ignore-predicates 
+;;         '((lambda () 
+;;             (string-match-p " \\*which-key\\*" (buffer-name)))))
   
-  ;; Now enable zoom-mode
-  (zoom-mode nil))
+;;   ;; Now enable zoom-mode
+;;   (zoom-mode nil))
 
 
 (with-eval-after-load 'which-key

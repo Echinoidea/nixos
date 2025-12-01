@@ -14,13 +14,17 @@
   programs.firefox = {
     enable = true;
 
+    policies = {
+      Fingerprinting = true;
+    };
+    
     profiles = {
       default = {
         id = 0;
         name = "default";
         isDefault = true;
         settings = {
-          "browser.startup.homepage" = "https://www.duckduckgo.com";
+          "browser.startup.homepage" = "";
           "browser.search.defaultenginename" = "duckduckgo";
         };
         search = {
@@ -51,7 +55,7 @@
             };
             "NixOS Wiki" = {
               urls = [ { template = "https://nixos.wiki/index.php?search={searchTerms}"; } ];
-              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              icon = "https://nixos.wiki/favicon.png";
               updateInterval = 24 * 60 * 60 * 1000; # every day
               definedAliases = [ "@nw" ];
             };
@@ -59,6 +63,18 @@
         };
         extensions = {
           force = true;
+
+          packages = with pkgs.nur.repos.rycee.firefox-addons; [
+            ublock-origin
+            better-canvas
+            bitwarden
+            vimium
+            youtube-shorts-block
+            shinigami-eyes
+            return-youtube-dislikes
+            darkreader
+            # org-capture
+          ];
         };
       };
     };

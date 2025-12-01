@@ -13,17 +13,17 @@ in
     inputs.home-manager.nixosModules.default
   ];
 
-  nixpkgs.overlays = [
-    (import (builtins.fetchTarball {
-      url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
-      sha256 = "sha256:18bygzs3qm0shi0gijbbn3f9r35f58ps5lgh0cgca38gkldz49rv";
-    }))
+  # nixpkgs.overlays = [
+  #   (import (builtins.fetchTarball {
+  #     url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+  #     sha256 = "sha256:18bygzs3qm0shi0gijbbn3f9r35f58ps5lgh0cgca38gkldz49rv";
+  #   }))
 
-    inputs.nur.overlays.default
-  ];
+  #   inputs.nur.overlays.default
+  # ];
   
-  services.emacs.package = pkgs.emacs-unstable;
-  services.emacs.enable = true;
+  services.emacs.package = pkgs.emacs;
+  services.emacs.enable = false;
 
   home-manager = {
     useGlobalPkgs = true;
@@ -183,11 +183,13 @@ in
     emacs-lsp-booster
     ispell
     # X11 Stuff
+    polybar
     picom
     xdotool
     xclip
     simplescreenrecorder
     maim
+    pulseaudio
     # xmobar
     feh
     sxhkd
@@ -208,24 +210,26 @@ in
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/embers-light.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/darkviolet.yaml";
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/chicago-day.yaml";
-
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/cupcake.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/cupcake.yaml";
+  
   stylix.fonts = {
     sizes.applications = 8;
 
     serif = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Serif";
+      package = pkgs.maple-mono.NF;
+      name = "Maple Mono NF";
     };
 
     sansSerif = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Sans";
+      package = pkgs.maple-mono.NF;
+      name = "Maple Mono NF";
     };
 
     monospace = {
-      package = pkgs.dejavu_fonts;
-      name = "DejaVu Sans Mono";
+      package = pkgs.maple-mono.NF;
+      name = "Maple Mono NF";
     };
 
     emoji = {

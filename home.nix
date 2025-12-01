@@ -21,8 +21,10 @@
     ./home/btop
     ./home/vesktop
     ./home/zathura
-
-    # ./home/eww.nix
+    ./home/qutebrowser
+    ./home/polybar
+    ./home/xresources
+    ./home/cava
     ./dev
   ];
 

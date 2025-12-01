@@ -30,18 +30,18 @@
     extraConfig = ''
       pkill sxhkd
       xrandr --output eDP-1 --mode 1920x1080 --pos 0x0 --output DP-1 --mode 2560x1440 --rate 143.97 --pos 1920x0
-      emacs --daemon
-      emacs --daemon=emenu
+      # emacs --daemon
+      # emacs --daemon=emenu
       ~/.config/sxhkd/scripts/start-sxhkd.sh &
-      if xrandr -q | grep -q "DP-1 connected"; then
-         eww open bar-dp1
-         eww open which-key-popup-dp1
-         eww open notification-window
-      elif xrandr -q | grep -q "eDP-1 connected"; then
-        eww open bar-edp1
-        eww open which-key-popup-edp1
-      fi
-      ~/.config/eww/scripts/notif-listener.sh &
+      # if xrandr -q | grep -q "DP-1 connected"; then
+      #    eww open bar-dp1
+      #    eww open which-key-popup-dp1
+      #    eww open notification-window
+      # elif xrandr -q | grep -q "eDP-1 connected"; then
+      #   eww open bar-edp1
+      #   eww open which-key-popup-edp1
+      # fi
+      # ~/.config/eww/scripts/notif-listener.sh &
       xset r rate 300 30
       source ~/.cache/wal/colors
       xsetroot -cursor_name left_ptr
@@ -108,7 +108,7 @@
       bspc config split_ratio 0.52
       bspc config borderless_monocle true
       bspc config gapless_monocle true
-      bspc config top_padding 36
+      bspc config top_padding 26
 
       unclutter -idle 1 -jitter 2 -root &
       # /home/gabriel/dmenu-scripts-x/pywal-update.sh
