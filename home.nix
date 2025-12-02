@@ -25,6 +25,7 @@
     ./home/polybar
     ./home/xresources
     ./home/cava
+    ./home/dmenu
     ./dev
   ];
 

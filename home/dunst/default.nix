@@ -1,7 +1,7 @@
 {
   stylix.targets.dunst.enable = true;
 
-  programs.dunst = {
+  services.dunst = {
     enable = true;
 
     settings = {

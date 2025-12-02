@@ -25,6 +25,7 @@ in
   services.emacs.package = pkgs.emacs;
   services.emacs.enable = false;
 
+  
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -91,7 +92,7 @@ in
   ];
 
   # services.displayManager.lemurs.enable = true;
-  services.displayManager.ly.enable = true;
+  # services.displayManager.ly.enable = true;
 
   services.libinput = {
     touchpad = {
@@ -190,11 +191,13 @@ in
     simplescreenrecorder
     maim
     pulseaudio
+    dunst
     # xmobar
     feh
     sxhkd
     unclutter
     rofi
+    # dmenu
     bsp-layout
     bc # bsp-layout dependency
     # Language dependencies
@@ -205,6 +208,9 @@ in
     steamcmd
     steam-tui
   ];
+
+  services.displayManager.cosmic-greeter.enable = true;
+  services.desktopManager.cosmic.enable = true;
 
   stylix.enable = true;
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
