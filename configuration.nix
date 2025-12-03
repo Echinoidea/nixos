@@ -92,7 +92,7 @@ in
   ];
 
   # services.displayManager.lemurs.enable = true;
-  # services.displayManager.ly.enable = true;
+  services.displayManager.ly.enable = true;
 
   services.libinput = {
     touchpad = {
@@ -209,16 +209,13 @@ in
     steam-tui
   ];
 
-  services.displayManager.cosmic-greeter.enable = true;
-  services.desktopManager.cosmic.enable = true;
-
   stylix.enable = true;
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/embers-light.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/darkviolet.yaml";
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/cupcake.yaml";
-  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/cupcake.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/da-one-paper.yaml";
   
   stylix.fonts = {
     sizes.applications = 8;

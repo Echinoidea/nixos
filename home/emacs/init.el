@@ -3,6 +3,7 @@
 ;;; Commentary:
 ;; Custom Emacs config
 
+;;; Code:
 
 (setq read-process-output-max (* 10 1024 1024)) ;; 10mb
 (setq gc-cons-threshold (* 100 1024 1024))
@@ -49,6 +50,10 @@
 
 (global-hl-line-mode)
 (global-word-wrap-whitespace-mode)
+
+(define-prefix-command 'global-org-prefix-map nil "Org & Roam")
+(global-set-key (kbd "C-o") 'global-org-prefix-map)
+
 
 ;; MEOW
 (use-package meow
@@ -416,7 +421,7 @@
 ;;   :custom
 ;;   (zoom-size '(0.618 . 0.618))
 ;;   (zoom-minibuffer-preserve-layout t)
-  
+
 ;;   :config
 ;;   ;; Set all ignore rules BEFORE enabling zoom-mode
 ;;   (setq zoom-ignored-major-modes '(dired-mode markdown-mode which-key-mode vundo-mode))
@@ -425,7 +430,7 @@
 ;;   (setq zoom-ignore-predicates 
 ;;         '((lambda () 
 ;;             (string-match-p " \\*which-key\\*" (buffer-name)))))
-  
+
 ;;   ;; Now enable zoom-mode
 ;;   (zoom-mode nil))
 
@@ -1187,8 +1192,8 @@
 ;; Better projectile + perspective integration
 (use-package persp-projectile
   :after (perspective projectile)
-  :bind (:map projectile-mode-map
-              ("C-c p p" . projectile-persp-switch-project)))
+  :config 
+  (define-key projectile-mode-map (kbd "C-c p p") 'projectile-persp-switch-project))
 
 
 ;; Add this after your projectile use-package
@@ -1206,10 +1211,6 @@
 	(setq projectile-switch-project-action #'projectile-find-file)
 	)
 
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
-
-
 (meow-leader-define-key
  '("p p" . projectile-persp-switch-project)
  '("p f" . projectile-find-file))
@@ -1219,9 +1220,12 @@
 (use-package rainbow-mode)
 
 (use-package rainbow-delimiters
-  :straight (rainbow-delimiters :type git :host github :repo "Fanael/rainbow-delimiters" :branch "master"))
+  :straight (rainbow-delimiters :type git :host github :repo "Fanael/rainbow-delimiters" :branch "master")
+	:hook
+	(prog-mode . rainbow-delimiters-mode)
+	)
 
-(add-hook 'tsx-ts-mode-hook #'rainbow-delimiters-mode) 
+;; (add-hook 'tsx-ts-mode-hook #'rainbow-delimiters-mode) 
 
 ;; Line numbers
 (global-display-line-numbers-mode 1)
@@ -1232,9 +1236,97 @@
                 eshell-mode-hook
 								dashboard-mode-hook
 								vterm-mode-hook
-								treemacs-mode-hook))
+								treemacs-mode-hook
+								which-key-mode-hook
+								dirvish-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
+
+(use-package org-roam
+  :bind
+  (:map global-org-prefix-map
+        ("n c" . org-roam-capture))
+	:custom
+	(setq org-roam-directory "~/org/roam")
+  :hook
+  (org-mode . (lambda ()
+                ;; Create prefix keymaps for nested structure
+                (define-prefix-command 'org-roam-local-prefix-map)
+                (define-prefix-command 'org-roam-ref-prefix-map)
+                (define-prefix-command 'org-roam-tag-prefix-map)
+                (define-prefix-command 'org-roam-alias-prefix-map)
+                
+                ;; Bind the main prefix
+                (local-set-key (kbd "C-c r") 'org-roam-local-prefix-map)
+                
+                ;; Bind top-level command
+                (define-key org-roam-local-prefix-map (kbd "l") #'org-roam-node-insert)
+                
+                ;; Bind sub-prefixes
+                (define-key org-roam-local-prefix-map (kbd "r") 'org-roam-ref-prefix-map)
+                (define-key org-roam-local-prefix-map (kbd "t") 'org-roam-tag-prefix-map)
+                (define-key org-roam-local-prefix-map (kbd "a") 'org-roam-alias-prefix-map)
+                
+                ;; Bind commands under each sub-prefix
+                (define-key org-roam-ref-prefix-map (kbd "a") #'org-roam-ref-add)
+                (define-key org-roam-ref-prefix-map (kbd "d") #'org-roam-ref-remove)
+                
+                (define-key org-roam-tag-prefix-map (kbd "a") #'org-roam-tag-add)
+                (define-key org-roam-tag-prefix-map (kbd "d") #'org-roam-tag-remove)
+                
+                (define-key org-roam-alias-prefix-map (kbd "a") #'org-roam-alias-add)
+                (define-key org-roam-alias-prefix-map (kbd "d") #'org-roam-alias-remove)
+                
+                ;; Add which-key descriptions
+                (which-key-add-keymap-based-replacements org-roam-local-prefix-map
+                  "l" "link/insert"
+                  "r" "ref"
+                  "t" "tag"
+                  "a" "alias")
+                
+                (which-key-add-keymap-based-replacements org-roam-ref-prefix-map
+                  "a" "add"
+                  "d" "delete")
+                
+                (which-key-add-keymap-based-replacements org-roam-tag-prefix-map
+                  "a" "add"
+                  "d" "delete")
+                
+                (which-key-add-keymap-based-replacements org-roam-alias-prefix-map
+                  "a" "add"
+                  "d" "delete"))))
+
+(use-package consult-org-roam
+	:ensure t
+	:after org-roam
+	:init
+	(require 'consult-org-roam)
+	(consult-org-roam-mode 1)
+	:custom
+	;; Use `ripgrep' for searching with `consult-org-roam-search'
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  ;; Configure a custom narrow key for `consult-buffer'
+  (consult-org-roam-buffer-narrow-key ?r)
+  ;; Display org-roam buffers right after non-org-roam buffers
+  ;; in consult-buffer (and not down at the bottom)
+  (consult-org-roam-buffer-after-buffers t)
+  :config
+  ;; Eventually suppress previewing for certain functions
+  (consult-customize
+	 consult-org-roam-forward-links
+	 :preview-key "M-."
+	 )
+  :bind
+	(:map global-org-prefix-map
+				("r f" . consult-org-roam-file-find)
+				("r b" . consult-org-roam-backlinks)
+				("r B" . consult-org-roam-backlinks-recursive)
+				("r l" . consult-org-roam-forward-links)
+				("r s" . consult-org-roam-search)
+				)
+	)
+
+(use-package org-roam-ui)
 
 ;; Vundo
 (use-package vundo
@@ -1334,10 +1426,6 @@
 
 (add-hook 'org-mode-hook #'org-indent-mode)
 
-(use-package deft
-	:config
-  (setq deft-directory "~/org/deft/"
-				deft-recursive t))
 
 (defun consult-find-org ()
 	;; Find a file in the ~/org dir with consult.
@@ -1345,13 +1433,24 @@
 	(consult-find "~/org/")
 	)
 
-(global-unset-key (kbd "C-o")) 
+
+(use-package deft
+	:config
+  (setq deft-directory "~/org/deft/"
+				deft-recursive t)
+	:bind
+	(:map global-org-prefix-map
+				("C-d C-d" . deft)
+				("C-d C-f" . deft-find-file)
+				("C-d C-n" . deft-new-file-named)
+				("C-f C-f" . consult-find-org)
+				)
+	)
 
 
-(define-key projectile-mode-map (kbd "C-o C-d C-d") 'deft)
-(define-key projectile-mode-map (kbd "C-o C-d C-f") 'deft-find-file)
-(define-key projectile-mode-map (kbd "C-o C-d C-n") 'deft-new-file-named)
-(define-key projectile-mode-map (kbd "C-o C-f C-f") 'consult-find-org)
+
+
+
 
 (add-hook 'org-mode-hook #'visual-line-mode)
 
@@ -1363,8 +1462,8 @@
 	(setq gptel-default-mode 'org-mode))
 
 
-(use-package xdg-launcher
-  :straight '(xdg-launcher :host github :repo "emacs-exwm/xdg-launcher"))
+;; (use-package xdg-launcher
+;;   :straight '(xdg-launcher :host github :repo "emacs-exwm/xdg-launcher"))
 
 ;; (setq vertico-buffer-display-action
 ;;       '(display-buffer-full-frame))
@@ -1426,27 +1525,28 @@
       (delete-frame frame))))
 
 
+
 ;; Extra Themes
 (use-package autothemer)
 
 (use-package south-theme
 	:straight '(south-theme :host github :repo "SophieBosio/south" :branch "main"))
 
-(use-package cyanometric-theme
-  :straight '(cyanometric-theme :host github :repo "emacsfodder/emacs-theme-cyanometric" :branch "master"))
+;; (use-package cyanometric-theme
+;;   :straight '(cyanometric-theme :host github :repo "emacsfodder/emacs-theme-cyanometric" :branch "master"))
 
-(use-package orangey-bits-theme 
-  :straight '(orangey-bits-theme :host github :repo "emacsfodder/emacs-theme-orangey-bits" :branch "master"))
+;; (use-package orangey-bits-theme 
+;;   :straight '(orangey-bits-theme :host github :repo "emacsfodder/emacs-theme-orangey-bits" :branch "master"))
 
-(use-package vegetative-theme)
+;; (use-package vegetative-theme)
 
 (use-package creamsody-theme)
 
-(use-package darktooth-theme)
+;; (use-package darktooth-theme)
 
-(use-package soothe-theme)
+;; (use-package soothe-theme)
 
-(use-package sakura-theme)
+;; (use-package sakura-theme)
 
 (use-package kaolin-themes)
 
@@ -1509,12 +1609,12 @@
 (eval-when-compile
   (defmacro my/embark-ace-action (fn)
     `(defun ,(intern (concat "my/embark-ace-" (symbol-name fn))) ()
-      (interactive)
-      (with-demoted-errors "%s"
-       (require 'ace-window)
-       (let ((aw-dispatch-always t))
-        (aw-switch-to-window (aw-select nil))
-        (call-interactively (symbol-function ',fn)))))))
+       (interactive)
+       (with-demoted-errors "%s"
+				 (require 'ace-window)
+				 (let ((aw-dispatch-always t))
+					 (aw-switch-to-window (aw-select nil))
+					 (call-interactively (symbol-function ',fn)))))))
 
 (define-key embark-file-map     (kbd "o") (my/embark-ace-action find-file))
 (define-key embark-buffer-map   (kbd "o") (my/embark-ace-action switch-to-buffer))
