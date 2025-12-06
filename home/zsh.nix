@@ -57,6 +57,11 @@
           dir=$(echo -e "$projects" | fzf) && cd "$dir"
       }
 
+      # set wallpaper with fzf and feh
+      wpaper() {
+               feh --bg-fill $(fd -t f . ~/Pictures/wallpapers/ | fzf --preview 'chafa -s ''${FZF_PREVIEW_COLUMNS}x''${FZF_PREVIEW_LINES} {}')
+      }
+
 
       # startup
       start-eww() {

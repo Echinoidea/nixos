@@ -2,8 +2,9 @@
 {
   stylix.targets.xresources.enable = true;
 
-  # xresources.properties = with config.stylix.withHashtag; {
-  #   "dmenu.foreground" = base05;
-  #   "dmenu.background" = base00;
-  # };
+  xresources.properties = {
+    "dmenu.foreground" = config.lib.stylix.colors.withHashtag.base05;
+    "dmenu.background" = config.lib.stylix.colors.withHashtag.base00;
+    "dmenu.selforeground" = config.lib.stylix.colors.withHashtag.base00;
+  };
 }

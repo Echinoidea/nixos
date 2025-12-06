@@ -1,0 +1,21 @@
+system: "base16"
+name: "Blueberry"
+author: "Guy"
+variant: "dark"
+palette:
+  base00: "#14131d" # bg0,       palette1 dark
+  base01: "#343051" # bg1,       palette1 dark
+  base02: "#3b3854" # bg3,       palette1 dark
+  base03: "#343051" # grey1,     palette2 dark
+  base04: "#7b7bbb" # grey2,     palette2 dark
+  base05: "#b8b8ff" # fg,        palette2 dark
+  base06: "#b8b8ff" # bg3,       palette1 light
+  base07: "#0b091d" # bg0,       palette1 light
+  base08: "#ff8888" # red,       palette2 dark
+  base09: "#ffa588" # orange,    palette2 dark
+  base0A: "#fffdd0" # yellow,    palette2 dark
+  base0B: "#88ff88" # green,     palette2 dark
+  base0C: "#88ffff" # aqua,      palette2 dark
+  base0D: "#beddff" # blue,      palette2 dark
+  base0E: "#e7c5ff" # purple,    palette2 dark
+  base0F: "#b8b8ff" # grey2,     palette2 dark

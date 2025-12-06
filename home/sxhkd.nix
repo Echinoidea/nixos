@@ -100,7 +100,7 @@
 
     # terminal emulator
     super + shift + Return
-      emacsclient -s emenu -c -a ' ' --eval '(my/vterm-new)'
+      emacsclient -s emenu -c -n -a ' ' --eval '(my/vterm-new)'
 
     super + Return
     		alacritty
@@ -128,7 +128,8 @@
 
     # program launcher
     super + space ; space
-    	emacsclient -s emenu -c -F '((name . "emenu-drun") (minibuffer . only) (width . 100) (height . 1) (undecorated . t))' -e '(emenu-drun)'
+        dmenu_run -l 10
+    	# emacsclient -s emenu -c -n -F '((name . "emenu-drun") (minibuffer . only) (width . 100) (height . 1) (undecorated . t))' -e '(emenu-drun)' 
 
     # make sxhkd reload its configuration files:
     super + ctrl + r
@@ -275,7 +276,7 @@
 
     # show sxhkd help
     super + slash
-    	  ~/.config/sxhkd/scripts/sxhkd-help.sh
+          ~/dmenu-scripts-x/dmenu-sxhkd-help.sh
 
     # maim
     super + Print
@@ -303,8 +304,7 @@
 
     # dmenu yt-dlp
     super + space ; d ; y
-    		notify-send "Hello"
-      # ~/dmenu-scripts-x/dmenu-ytdlp.sh
+      ~/dmenu-scripts-x/dmenu-ytdlp.sh
 
     # dmenu mpc
     super + space ; d ; m
@@ -359,7 +359,7 @@
     #   emacsclient --eval "(emacs-everywhere)"
 
     # dmenu emacs open project
-    super + space ; d ; e ; p 
+    super + space ; d ; e ; p
       ~/dmenu-scripts-x/dmenu-emacs-project.sh
 
     # dmenu manage emacs
@@ -371,7 +371,7 @@
       ~/dmenu-scripts-x/dmenu-notes.sh
 
     super + space ; e ; u
-       emacsclient -s emenu -c -F '((name . "emenu-url") (minibuffer . only) (width . 100) (height . 1) (undecorated . t))' -e '(emenu-url)'
+       emacsclient -s emenu -c -n -F '((name . "emenu-url") (minibuffer . only) (width . 100) (height . 1) (undecorated . t))' -e '(emenu-url)'
 
 
     #

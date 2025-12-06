@@ -104,9 +104,9 @@
      '("D" . meow-backward-delete)
      '("e" . meow-next-word)
      '("E" . meow-next-symbol)
-     '("f" . meow-find)
      '("g" . meow-cancel-selection)
      '("G" . meow-grab)
+		 '("f" . meow-find)
      '("h" . meow-left)
      '("H" . meow-left-expand)
      '("i" . meow-insert)
@@ -143,7 +143,113 @@
   (meow-setup)
   (meow-global-mode 1))
 
+
+
+(use-package avy
+  :config
+	(defun avy-goto-conditional ()
+    (interactive)
+    (avy--generic-jump "\\s(\\(if\\|cond\\|when\\|unless\\)\\b" nil 'pre))
+
+  (defun avy-goto-parens ()
+    (interactive)
+    (let ((avy-command this-command))
+      (avy-jump "(+")))
+  
+  (add-to-list 'avy-orders-alist '(avy-goto-parens . avy-order-closest))
+
+  (defun avy-org-same-level (&optional all)
+    "Go to any org heading of the same level as the current one."
+    (interactive "P")
+    (let ((org-level (org-current-level)))
+      (let ((pos (avy--generic-jump
+                  (format "^%s " (regexp-quote (make-string org-level ?*)))
+                  nil
+                  (unless (or all (= org-level 1))
+                    (save-excursion (outline-up-heading 1) (point)))
+                  (unless (or all (= org-level 1))
+                    (save-excursion (outline-up-heading 1) (org-end-of-subtree))))))
+        (when pos 
+          (goto-char (if (consp pos) (car pos) pos))))))
+
+  (defun avy-org-parent-level (&optional all)
+    "Go to any org heading one level above the current one."
+    (interactive "P")
+    (let ((org-level (org-current-level)))
+      (if (= org-level 1)
+          (message "Already at top level.")
+        (let ((pos (avy--generic-jump
+                    (format "^%s " (regexp-quote (make-string (- org-level 1) ?*)))
+                    nil
+                    (unless (or all (= org-level 2))
+                      (save-excursion (outline-up-heading 2) (point)))
+                    (unless (or all (= org-level 2))
+                      (save-excursion (outline-up-heading 2) (org-end-of-subtree))))))
+          (when pos 
+            (goto-char (if (consp pos) (car pos) pos)))))))
+
+  (defun avy-org-child-level (&optional all)
+    "Go to any org heading one level below the current one."
+    (interactive "P")
+    (if (save-excursion (org-goto-first-child))
+        (let ((org-level (org-current-level)))
+          (let ((pos (avy--generic-jump
+                      (format "^%s " (regexp-quote (make-string (+ org-level 1) ?*)))
+                      nil
+                      (unless all
+                        (save-excursion (ignore-errors (outline-up-heading 0)) (point)))
+                      (unless all
+                        (save-excursion (ignore-errors (outline-up-heading 0)) (org-end-of-subtree))))))
+            (when pos 
+              (goto-char (if (consp pos) (car pos) pos)))))
+      (message "Heading has no children.")))
+
+  (defun avy-org-goto-level (&optional num)
+    "Prompt for an org level to go to, defaulting to the current one."
+    (interactive (list (read-number "Select heading level: " (org-current-level))))
+    (let ((pos (avy--generic-jump
+                (format "^%s " (regexp-quote (make-string num ?*)))
+                nil)))
+      (when pos 
+        (goto-char (if (consp pos) (car pos) pos)))))
+
+  (defun avy-org-table-1-char ()
+    "Avy navigation of cells in org-mode tables."
+    (interactive)
+    (let ((table-begin (save-excursion (goto-char (org-table-begin)) (previous-line) (point)))
+          (table-end (save-excursion (goto-char (org-table-end)) (next-line) (point))))
+      (let ((pos (avy--generic-jump 
+                  (concat "|\\{1\\}[^-\n|]+" (char-to-string (read-char "char: " t))) 
+                  t
+                  table-begin
+                  table-end)))
+        (when pos
+          (goto-char (if (consp pos) (car pos) pos))
+          (org-cycle)))))
+  :bind
+  ("C-; f" . avy-goto-char)
+  ("C-; F" . avy-goto-char-2)
+  ("C-; w" . avy-goto-word-1)
+  ("C-; l" . avy-goto-line)
+  ("C-; k" . avy-goto-line-above)
+  ("C-; j" . avy-goto-line-below)
+  ("C-; ;" . avy-resume)
+  ("C-; i" . avy-goto-conditional)
+  ("C-; p" . avy-goto-parens)
+  
+  :hook
+  (org-mode . (lambda ()
+                (define-prefix-command 'org-avy-local-prefix-map)
+                (local-set-key (kbd "C-c ;") 'org-avy-local-prefix-map)
+                (define-key org-avy-local-prefix-map (kbd "h") #'avy-org-goto-heading-timer)
+                (define-key org-avy-local-prefix-map (kbd "r") #'avy-org-refile-as-child)
+                (define-key org-avy-local-prefix-map (kbd "s") #'avy-org-same-level)
+                (define-key org-avy-local-prefix-map (kbd "p") #'avy-org-parent-level)
+                (define-key org-avy-local-prefix-map (kbd "c") #'avy-org-child-level)
+                (define-key org-avy-local-prefix-map (kbd "l") #'avy-org-goto-level))))
 ;; Set jk as escape insert mode
+;; Set jk as escape insert mode
+
 (setq meow-two-char-escape-sequence "jk")
 (setq meow-two-char-escape-delay 0.5)
 
@@ -587,11 +693,11 @@
 ;; algorithms), but let us keep things simple.
 ;;
 ;; Further reading: https://protesilaos.com/emacs/dotemacs#h:7cc77fd0-8f98-4fc0-80be-48a758fcb6e2
-(use-package orderless
-  :straight t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+;; (use-package orderless
+;;   :straight t
+;;   :custom
+;;   (completion-styles '(orderless basic))
+;;   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; The `consult' package provides lots of commands that are enhanced
 ;; variants of basic, built-in functionality.  One of the headline
@@ -711,7 +817,9 @@
 (use-package tsx-mode
   :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs30"))
 
-(use-package csv-mode)
+(use-package csv-mode
+  :mode "\\.csv\\'"
+	)
 
 (setq-default tab-width 2)
 
@@ -978,6 +1086,7 @@
   ;; Tell lsp-mode how to identify these modes
   (add-to-list 'lsp-language-id-configuration '(tsx-ts-mode . "typescriptreact"))
   (add-to-list 'lsp-language-id-configuration '(typescript-ts-mode . "typescript"))
+  (add-to-list 'lsp-language-id-configuration '(c-ts-mode . "c")) ;; NOTE: If error, fix here
   
   ;; Register the client with explicit path
   (lsp-register-client
@@ -990,7 +1099,8 @@
     :activation-fn (lsp-activate-on "typescript" "typescriptreact")
     :priority 1
     :server-id 'ts-ls
-    :major-modes '(typescript-mode typescript-ts-mode tsx-ts-mode js-mode js-ts-mode))))
+    :major-modes '(typescript-mode typescript-ts-mode tsx-ts-mode js-mode js-ts-mode)))
+	)
 
 
 
@@ -1328,6 +1438,10 @@
 
 (use-package org-roam-ui)
 
+(use-package calfw)
+(use-package calfw-org)
+(use-package calfw-cal)
+
 ;; Vundo
 (use-package vundo
   :straight t
@@ -1462,8 +1576,8 @@
 	(setq gptel-default-mode 'org-mode))
 
 
-;; (use-package xdg-launcher
-;;   :straight '(xdg-launcher :host github :repo "emacs-exwm/xdg-launcher"))
+(use-package xdg-launcher
+  :straight '(xdg-launcher :host github :repo "emacs-exwm/xdg-launcher"))
 
 ;; (setq vertico-buffer-display-action
 ;;       '(display-buffer-full-frame))
@@ -1485,7 +1599,7 @@
         (xdg-launcher-run-app)
       
       ;; This cleanup code runs after xdg-launcher-run-app completes OR if you hit C-g
-      (delete-frame frame))))
+      (delete-frame frame t))))
 
 (defun emenu--consult-open-url ()
   "Select a URL from a list and open it in Firefox."
@@ -1522,9 +1636,21 @@
         (emenu--consult-open-url)
       
       ;; This cleanup code runs after xdg-launcher-run-app completes OR if you hit C-g
-      (delete-frame frame))))
+      (delete-frame frame t))))
 
 
+(defun emenu-project ()
+  "Switch to a projectile project in vertico-only frame."
+  (interactive)
+  (let ((frame (selected-frame)))
+    (set-frame-parameter frame 'name "emenu-project")
+    
+    (unwind-protect
+        ;; Call projectile-switch-project-by-name interactively
+        ;; This will show the project list in the minibuffer with vertico
+        (call-interactively #'projectile-switch-project-by-name)
+      
+      (delete-frame frame t))))
 
 ;; Extra Themes
 (use-package autothemer)

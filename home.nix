@@ -26,6 +26,7 @@
     ./home/xresources
     ./home/cava
     ./home/dmenu
+    ./home/dunst
     ./dev
   ];
 

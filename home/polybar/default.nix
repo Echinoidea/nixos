@@ -61,8 +61,10 @@
         height = "24px";
         radius = 0;
 
- font-0 = "${config.stylix.fonts.monospace.name}:size=${toString config.stylix.fonts.sizes.applications}";
+        font-0 = "${config.stylix.fonts.monospace.name}:size=${toString config.stylix.fonts.sizes.applications}";
         font-1 = "${config.stylix.fonts.emoji.name}:size=${toString config.stylix.fonts.sizes.applications}";
+
+        separator = "|";
         
         # Add underline support
         line-size = 2;
@@ -78,7 +80,7 @@
 
         modules-left = "bspwm";
         modules-center = "date";
-        modules-right = "battery";
+        modules-right = "pulseaudio cpu memory battery";
       };
 
       "module/date" = {
@@ -177,8 +179,120 @@
         animation-low-framerate = 200;
       };
 
-    };
+      "module/memory" = {
+        # https://github.com/polybar/polybar/wiki/Module:-memory
 
+        type = "internal/memory";
+
+        interval = 3;
+
+        warn-percentage = 95;
+
+        format = "<label> <bar-used>";
+
+        label = " %gb_used%/%gb_total%";
+
+        label-warn = "! %gb_used%/%gb_free%";
+        # label-urgent-background = "\${colors.red}";
+
+        bar-used-indicator = "";
+        bar-used-width = 10;
+        bar-used-foreground-0 = "\${colors.blue}";
+        bar-used-foreground-1 = "\${colors.green}";
+        bar-used-foreground-2 = "\${colors.yellow}";
+        bar-used-foreground-3 = "\${colors.red}";
+        bar-used-fill = "▐";
+        bar-used-empty = "▐";
+        bar-used-empty-foreground = "\${colors.foreground}";
+
+        ramp-used-0 = "▁";
+        ramp-used-1 = "▂";
+        ramp-used-2 = "▃";
+        ramp-used-3 = "▄";
+        ramp-used-4 = "▅";
+        ramp-used-5 = "▆";
+        ramp-used-6 = "▇";
+        ramp-used-7 = "█";
+
+        ramp-free-0 = "▁";
+        ramp-free-1 = "▂";
+        ramp-free-2 = "▃";
+        ramp-free-3 = "▄";
+        ramp-free-4 = "▅";
+        ramp-free-5 = "▆";
+        ramp-free-6 = "▇";
+        ramp-free-7 = "█";
+      };
+
+      "module/cpu" = {
+        type = "internal/cpu";
+
+        interval = 2;
+
+        warn-percentage = 95;
+
+        format = "<label> <ramp-coreload>";
+
+        label = " %percentage%%";
+
+        label-warn = "! %percentage%%";
+
+        ramp-coreload-spacing = 0;
+        ramp-coreload-0 = "▁";
+        ramp-coreload-1 = "▂";
+        ramp-coreload-2 = "▃";
+        ramp-coreload-3 = "▄";
+        ramp-coreload-4 = "▅";
+        ramp-coreload-5 = "▆";
+        ramp-coreload-6 = "▇";
+        ramp-coreload-7 = "█";
+      };
+
+      "module/menu-apps" = {
+        type = "custom/menu";
+
+        expand-right = true;
+
+        menu-0-0 = "Browsers";
+        menu-0-0-exec = "menu-open-1";
+        menu-0-1 = "Power";
+        menu-0-1-exec = "menu-open-2";
+        menu-0-2 = "Utils";
+        menu-0-2-exec = "menu-open-3";
+
+        menu-1-0 = "Firefox";
+        menu-1-0-exec = "firefox";
+
+        menu-2-0 = "Power";
+        menu-2-0-exec = "/home/gabriel/dmenu-scripts-x/dmenu-power.sh";
+
+        menu-3-0 = "Utils";
+        menu-3-0-exec = "/home/gabriel/dmenu-scripts-x/dmenu-sxhkd-help.sh";
+
+        label-open = "Menu";
+        label-close = "X";
+
+        label-separator = "|";
+      };
+
+      "module/pulseaudio" = {
+        type = "internal/pulseaudio";
+
+        use-ui-max = true;
+
+        interval = 5;
+
+        reverse-scroll = true;
+
+        format-volume = "<ramp-volume> <label-volume>";
+
+        label-muted = "x";
+        
+        ramp-volume-0 = "";
+        ramp-volume-1 = "";
+        ramp-volume-2 = "";
+      };
+    };
   };
 
   systemd.user.services.polybar = {
@@ -188,4 +302,11 @@
   };
 
   systemd.user.services.polybar.Service.ExecReload = "${pkgs.coreutils}/bin/cut";
+
+  home.activation.restartPolybar = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+    if ${pkgs.systemd}/bin/systemctl --user is-active polybar.service >/dev/null 2>&1; then
+      $DRY_RUN_CMD ${pkgs.systemd}/bin/systemctl --user restart polybar.service
+    fi
+  '';
+
 }

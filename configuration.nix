@@ -1,11 +1,15 @@
 {
   config,
+  lib,
   pkgs,
   inputs,
   ...
 }:
 let
-  nurNoPkgs = import inputs.nur { pkgs = null; nurpkgs = pkgs; };
+  nurNoPkgs = import inputs.nur {
+    pkgs = null;
+    nurpkgs = pkgs;
+  };
 in
 {
   imports = [
@@ -21,16 +25,24 @@ in
 
   #   inputs.nur.overlays.default
   # ];
-  
+
   services.emacs.package = pkgs.emacs;
   services.emacs.enable = false;
 
-  
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.gabriel = {
-      imports = [ ./home.nix nurNoPkgs.repos.rycee.hmModules.emacs-init ];
+    users.gabriel = {config, ...}: {
+      xresources.properties = {
+        "dmenu.foreground" = config.lib.stylix.colors.withHashtag.base05;
+        "dmenu.background" = config.lib.stylix.colors.withHashtag.base00;
+        "dmenu.selbackground" = config.lib.stylix.colors.withHashtag.base06;
+        "dmenu.selforeground" = config.lib.stylix.colors.withHashtag.base00;
+      };
+      imports = [
+        ./home.nix
+        nurNoPkgs.repos.rycee.hmModules.emacs-init
+      ];
     };
   };
 
@@ -192,11 +204,13 @@ in
     maim
     pulseaudio
     dunst
+    chafa # terminal image previews for wpaper zsh
     # xmobar
     feh
     sxhkd
     unclutter
     rofi
+    man-pages
     # dmenu
     bsp-layout
     bc # bsp-layout dependency
@@ -209,14 +223,27 @@ in
     steam-tui
   ];
 
+  documentation = {
+    dev.enable = true;
+    man.enable = true;
+    man.generateCaches = false;
+
+    # this is causing a build error because stylix.lib lib is missing.
+    # nixos.includeAllModules = true;
+  };
+
   stylix.enable = true;
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/caroline.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/embers-light.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/darkviolet.yaml";
-  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/cupcake.yaml";
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/da-one-paper.yaml";
-  
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-pale.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/valua.yaml";
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest-dark-hard.yaml";
+  # stylix.base16Scheme = ./stylix/blueberry.yaml;
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+
   stylix.fonts = {
     sizes.applications = 8;
 
@@ -373,6 +400,6 @@ in
     max-jobs = "auto";
     cores = 0;
   };
-  
+
   system.stateVersion = "25.05";
 }
