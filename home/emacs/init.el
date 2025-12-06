@@ -47,6 +47,7 @@
 (setq use-short-answers t)
 (setq initial-scratch-message "")
 
+(add-hook 'prog-mode-hook #'electric-pair-mode)
 
 (global-hl-line-mode)
 (global-word-wrap-whitespace-mode)
@@ -148,15 +149,17 @@
 (use-package avy
   :config
 	(defun avy-goto-conditional ()
-    (interactive)
-    (avy--generic-jump "\\s(\\(if\\|cond\\|when\\|unless\\)\\b" nil 'pre))
+		(interactive)
+		(avy-jump "\\s(\\(if\\|cond\\|elif\\|else\\|elseif\\|when\\|unless\\)\\b"))
+	
 
-  (defun avy-goto-parens ()
-    (interactive)
-    (let ((avy-command this-command))
-      (avy-jump "(+")))
-  
+	(defun avy-goto-parens ()
+  (interactive)
+  (let ((avy-command this-command))   ; for look up in avy-orders-alist
+    (avy-jump "(+")))
+	
   (add-to-list 'avy-orders-alist '(avy-goto-parens . avy-order-closest))
+  
 
   (defun avy-org-same-level (&optional all)
     "Go to any org heading of the same level as the current one."
@@ -236,6 +239,8 @@
   ("C-; ;" . avy-resume)
   ("C-; i" . avy-goto-conditional)
   ("C-; p" . avy-goto-parens)
+  ("C-; m" . avy-pop-mark)
+	("C-; s" . avy-isearch)
   
   :hook
   (org-mode . (lambda ()
@@ -247,6 +252,31 @@
                 (define-key org-avy-local-prefix-map (kbd "p") #'avy-org-parent-level)
                 (define-key org-avy-local-prefix-map (kbd "c") #'avy-org-child-level)
                 (define-key org-avy-local-prefix-map (kbd "l") #'avy-org-goto-level))))
+
+(use-package beacon
+	:config
+	(beacon-mode 1))
+
+(with-eval-after-load 'beacon
+  (defun my-beacon-blink-after-avy (&rest _)
+    "Blink beacon after avy jump."
+    (beacon-blink))
+  
+  (advice-add 'avy-goto-char :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-goto-char-2 :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-goto-word-1 :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-goto-line :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-goto-conditional :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-goto-parens :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-isearch :after #'my-beacon-blink-after-avy)
+	
+  (advice-add 'avy-org-goto-heading-timer :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-org-same-level :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-org-parent-level :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-org-child-level :after #'my-beacon-blink-after-avy)
+  (advice-add 'avy-org-goto-level :after #'my-beacon-blink-after-avy)
+
+	)
 ;; Set jk as escape insert mode
 ;; Set jk as escape insert mode
 
@@ -342,15 +372,15 @@
   :config
   (which-key-mode))
 
-(add-to-list 'default-frame-alist
-             '(font . "FantasqueSansM Nerd Font-10"))
+;; (add-to-list 'default-frame-alist
+;;              '(font . "FantasqueSansM Nerd Font-10"))
 
 
-(let ((mono-spaced-font "FantasqueSansM Nerd Font") 
-      (proportionately-spaced-font "Sans"))
-  (set-face-attribute 'default nil :family mono-spaced-font :height 100)
-  (set-face-attribute 'fixed-pitch nil :family mono-spaced-font :height 1.0)
-  (set-face-attribute 'variable-pitch nil :family proportionately-spaced-font :height 1.0))
+;; (let ((mono-spaced-font "FantasqueSansM Nerd Font") 
+;;       (proportionately-spaced-font "Sans"))
+;;   (set-face-attribute 'default nil :family mono-spaced-font :height 100)
+;;   (set-face-attribute 'fixed-pitch nil :family mono-spaced-font :height 1.0)
+;;   (set-face-attribute 'variable-pitch nil :family proportionately-spaced-font :height 1.0))
 
 
 (use-package default-font-presets
